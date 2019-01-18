@@ -2,6 +2,7 @@
 
 import tree, { Tree } from '../src/tree'
 import parse, { Parse } from '../src/parse'
+import output from '../src/output'
 
 const getFiles = (fileTree: Tree[]): Tree[] => {
     let files = []
@@ -63,6 +64,7 @@ files.forEach((file) => {
     }
 })
 
-console.log(result)
+output(result)
+
 
 
