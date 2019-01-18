@@ -7,20 +7,20 @@ interface Option {
     filter?: RegExp
 }
 
-export interface TreeOutput {
+export interface Tree {
     name: string
     path: string,
     type: 'directory' | 'file'
     size: number
     extension: string | null
-    children: TreeOutput[]
+    children: Tree[]
 }
 
 const isReg = reg => {
     return typeof reg === 'object' && reg.constructor == RegExp
 }
 
-function tree(dir: string, option?: Option): TreeOutput[] {
+function tree(dir: string, option?: Option): Tree[] {
 
     option = option || {}
 

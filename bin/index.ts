@@ -1,12 +1,9 @@
 #!/usr/bin/env node
 
-import * as fs from 'fs'
-import tree, { TreeOutput } from '../src/tree'
-import typescript from '../parse/typescript'
-import json from '../parse/json'
-import other from '../parse/other'
+import tree, { Tree } from '../src/tree'
+import parse, { Parse } from '../src/parse'
 
-const getFiles = (fileTree: TreeOutput[]): TreeOutput[] => {
+const getFiles = (fileTree: Tree[]): Tree[] => {
     let files = []
     fileTree.forEach((item) => {
         if(item.type === 'file') {
@@ -18,42 +15,50 @@ const getFiles = (fileTree: TreeOutput[]): TreeOutput[] => {
     return files
 }
 
-const result: any = {}
+
+interface Result extends Parse {
+    files: number
+}
+
+const result: {
+    [key: string]: Result
+} = { }
+
+
+const merge = (lang: string, options: Parse) => {
+    if(result[lang] === undefined) {
+        result[lang] = {
+            code: 0,
+            comment: 0,
+            blank: 0,
+            lines: 0,
+            files: 0
+        }
+    }
+    result[lang].code += options.code
+    result[lang].comment += options.comment
+    result[lang].blank += options.blank
+    result[lang].lines += options.lines
+    result[lang].files += 1
+}
 
 const files = getFiles(tree(process.cwd(), {
     filter: /node_modules|\.git/
 }))
 
-const mergeOption = (lang: string, options: any) => {
-    if(result[lang] === undefined) {
-        result[lang] = {
-            Code: 0,
-            Comment: 0,
-            Blank: 0,
-            Lines: 0,
-            Files: 0
-        }
-    }
-    result[lang].Code = result[lang].Code + options.Code
-    result[lang].Comment = result[lang].Comment + options.Comment
-    result[lang].Blank = result[lang].Blank + options.Blank
-    result[lang].Lines = result[lang].Lines + options.Lines
-    result[lang].Files = result[lang].Files + 1
-}
-
 files.forEach((file) => {
     switch(file.extension) {
         case '.ts': {
-            mergeOption('TypeScript', typescript(fs.readFileSync(file.path, 'utf8')))
-            break
+            return merge('TypeScript', parse(file.path, /\s*\/\/.*/g))
         }
         case '.json': {
-            mergeOption('JSON', json(fs.readFileSync(file.path, 'utf8')))
-            break
+            return merge('JSON', parse(file.path))
+        }
+        case '.md': {
+            return merge('MarkDown', parse(file.path))
         }
         default: {
-            mergeOption('Other', other(fs.readFileSync(file.path, 'utf8')))
-            break
+            return merge('Other', parse(file.path))
         }
     }
 })
