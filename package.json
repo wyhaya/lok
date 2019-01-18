@@ -1,0 +1,20 @@
+{
+    "name": "rots",
+    "version": "0.0.0",
+    "description": "Calculate the number of lines of code",
+    "main": "index.js",
+    "scripts": {
+        "dev": "ts-node ./bin/index.ts"
+    },
+    "bin": {
+        "rots": "./bin/index.js"
+    },
+    "devDependencies": {
+        "@types/node": "^10.12.18",
+        "ts-node": "^7.0.1",
+        "typescript": "^3.2.4"
+    },
+    "repository": "https://github.com/wyhaya/rots.git",
+    "author": "wyhaya <wyhaya@gmail.com>",
+    "license": "MIT"
+}
