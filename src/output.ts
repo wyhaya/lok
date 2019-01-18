@@ -1,17 +1,50 @@
 
 
+import { Parse } from './parse'
+
 const max = 12
 
-export default (data: any) => {
+interface Result extends Parse {
+    files: number
+    language?: string
+}
 
-    const result = []
+export default (data: {[key: string]: Result}): void => {
+
+    const result: Result[] = []
 
     for(let x in data) {
         data[x].language = x
         result.push(data[x])
     }
 
-    const { code, comment, blank, lines, files } = result.reduce((prev, next) => {
+    const header = [
+        'Language'.padEnd(max, ' '),
+        'Code'.padStart(max, ' '),
+        'Comment'.padStart(max, ' '),
+        'Blank'.padStart(max, ' '),
+        'Lines'.padStart(max, ' '),
+        'Files'.padStart(max, ' ')
+    ]
+
+    console.log(`┌${'─'.padEnd(max * 6 + 2, '─')}┐`)
+    console.log(`│ ${header[0]}${header[1]}${header[2]}${header[3]}${header[4]}${header[5]} │`)
+    console.log(`├${'─'.padEnd(max * 6 + 2, '─')}┤`)
+
+    result.forEach((item) => {
+        console.log(
+            '│ ' +
+            item.language.padEnd(max, ' ') +
+            item.code.toString().padStart(max, ' ') +
+            item.comment.toString().padStart(max, ' ') +
+            item.blank.toString().padStart(max, ' ') +
+            item.lines.toString().padStart(max, ' ') +
+            item.files.toString().padStart(max, ' ') +
+            ' │'
+        )
+    })
+    
+    const total = result.reduce((prev, next) => {
         next = {...next}
         next.code += prev.code
         next.comment += prev.comment
@@ -21,21 +54,19 @@ export default (data: any) => {
         return next
     })
 
-    console.log(`┌${'─'.padEnd(max * 6 + 2, '─')}┐`)
-    console.log(`│ ${'Language'.padEnd(max, ' ')}${'Code'.padStart(max, ' ')}${'Comment'.padStart(max, ' ')}${'Blank'.padStart(max, ' ')}${'Lines'.padStart(max, ' ')}${'Files'.padStart(max, ' ')} │`)
+    const folter = [
+        'Total'.padEnd(max, ' '),
+        total.code.toString().padStart(max, ' '),
+        total.comment.toString().padStart(max, ' '),
+        total.blank.toString().padStart(max, ' '),
+        total.lines.toString().padStart(max, ' '),
+        total.files.toString().padStart(max, ' ')
+    ]
+
     console.log(`├${'─'.padEnd(max * 6 + 2, '─')}┤`)
-    result.forEach((item) => {
-        const language = item.language.padEnd(max, ' ')
-        const code = item.code.toString().padStart(max, ' ')
-        const comment = item.comment.toString().padStart(max, ' ')
-        const blank = item.blank.toString().padStart(max, ' ')
-        const lines = item.lines.toString().padStart(max, ' ')
-        const files = item.files.toString().padStart(max, ' ')
-        console.log(`│ ${language}${code}${comment}${blank}${lines}${files} │`)
-    })
-    console.log(`├${'─'.padEnd(max * 6 + 2, '─')}┤`)
-    console.log(`│ ${'Total'.padEnd(max, ' ')}${code.toString().padStart(max, ' ')}${comment.toString().padStart(max, ' ')}${blank.toString().padStart(max, ' ')}${lines.toString().padStart(max, ' ')}${files.toString().padStart(max, ' ')} │`)
+    console.log(`│ ${folter[0]}${folter[1]}${folter[2]}${folter[3]}${folter[4]}${folter[5]} │`)
     console.log(`└${'─'.padEnd(max * 6 + 2, '─')}┘`)
+
 }
 
 
