@@ -16,7 +16,7 @@ export default (filePath: string, commentReg?: RegExp): Parse => {
     let blank = (content.match(/\n\s*\n/g) || []).length
 
     let comment = 0
-    if(commentReg !== undefined) {
+    if(commentReg) {
         comment = (content.match(commentReg) || []).length
     }
 

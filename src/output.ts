@@ -3,7 +3,7 @@
 import { Parse } from './parse'
 import outputColor from './color'
 
-const max = 12
+const max = 14
 
 interface Result extends Parse {
     files: number
@@ -18,6 +18,8 @@ export default (data: {[key: string]: Result}): void => {
         data[x].language = x
         result.push(data[x])
     }
+
+    result.sort((x, y) => x.language.charAt(0) > y.language.charAt(0) ? 1 : -1)
 
     const header = [
         'Language'.padEnd(max, ' '),

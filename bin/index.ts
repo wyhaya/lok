@@ -3,6 +3,8 @@
 import tree, { Tree } from '../src/tree'
 import parse, { Parse } from '../src/parse'
 import output from '../src/output'
+import config from '../src/config'
+
 
 const getFiles = (fileTree: Tree[]): Tree[] => {
     let files = []
@@ -48,23 +50,14 @@ const files = getFiles(tree(process.cwd(), {
 }))
 
 files.forEach((file) => {
-    switch(file.extension) {
-        case '.ts': {
-            return merge('TypeScript', parse(file.path, /\s*\/\/.*/g))
-        }
-        case '.json': {
-            return merge('JSON', parse(file.path))
-        }
-        case '.md': {
-            return merge('MarkDown', parse(file.path))
-        }
-        default: {
-            return merge('Other', parse(file.path))
-        }
+    const conf = config[file.extension]
+    if(conf) {
+        merge(conf[0], parse(file.path, conf[1]))
+    }else {
+        merge('Other', parse(file.path))
     }
 })
 
 output(result)
-
 
 
