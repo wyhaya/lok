@@ -28,7 +28,7 @@ const result: {
 } = { }
 
 
-const merge = (lang: string, options: Parse) => {
+const merge = (lang: string, { code, comment, blank, lines }: Parse) => {
     if(result[lang] === undefined) {
         result[lang] = {
             code: 0,
@@ -38,10 +38,10 @@ const merge = (lang: string, options: Parse) => {
             files: 0
         }
     }
-    result[lang].code += options.code
-    result[lang].comment += options.comment
-    result[lang].blank += options.blank
-    result[lang].lines += options.lines
+    result[lang].code += code
+    result[lang].comment += comment
+    result[lang].blank += blank
+    result[lang].lines += lines
     result[lang].files += 1
 }
 

@@ -9,9 +9,9 @@ const config: Config = {
     '.scss': ['CSS'],
     '.sass': ['CSS'],
     '.html': ['HTML'],
-    '.js': ['JavaScript', /\s*\/\/.*/g],
+    '.js': ['JavaScript', /(?:^|\n|\r)\/\/.*(?:\r|\n|$)/g],
     '.jsx': ['JavaScript JSX'],
-    '.ts': ['TypeScript', /\s*\/\/.*/g],
+    '.ts': ['TypeScript', /(?:^|\n|\r)\/\/.*(?:\r|\n|$)/g],  // /(?:^|\n|\r)\s*\/\*[\s\S]*?\*\/\s*(?:\r|\n|$)/g
     '.tsx': ['TypeScript JSX'],
     '.json': ['JSON'],
     '.md': ['MarkDown'],
