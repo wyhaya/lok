@@ -1,6 +1,7 @@
 
 
 import { Parse } from './parse'
+import outputColor from './color'
 
 const max = 12
 
@@ -27,12 +28,12 @@ export default (data: {[key: string]: Result}): void => {
         'Files'.padStart(max, ' ')
     ]
 
-    console.log(`┌${'─'.padEnd(max * 6 + 2, '─')}┐`)
-    console.log(`│ ${header[0]}${header[1]}${header[2]}${header[3]}${header[4]}${header[5]} │`)
-    console.log(`├${'─'.padEnd(max * 6 + 2, '─')}┤`)
+    outputColor(`┌${'─'.padEnd(max * 6 + 2, '─')}┐`)
+    outputColor(`│ ${header[0]}${header[1]}${header[2]}${header[3]}${header[4]}${header[5]} │`)
+    outputColor(`├${'─'.padEnd(max * 6 + 2, '─')}┤`)
 
     result.forEach((item) => {
-        console.log(
+        outputColor(
             '│ ' +
             item.language.padEnd(max, ' ') +
             item.code.toString().padStart(max, ' ') +
@@ -63,9 +64,9 @@ export default (data: {[key: string]: Result}): void => {
         total.files.toString().padStart(max, ' ')
     ]
 
-    console.log(`├${'─'.padEnd(max * 6 + 2, '─')}┤`)
-    console.log(`│ ${folter[0]}${folter[1]}${folter[2]}${folter[3]}${folter[4]}${folter[5]} │`)
-    console.log(`└${'─'.padEnd(max * 6 + 2, '─')}┘`)
+    outputColor(`├${'─'.padEnd(max * 6 + 2, '─')}┤`)
+    outputColor(`│ ${folter[0]}${folter[1]}${folter[2]}${folter[3]}${folter[4]}${folter[5]} │`)
+    outputColor(`└${'─'.padEnd(max * 6 + 2, '─')}┘`)
 
 }
 
