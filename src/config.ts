@@ -5,19 +5,23 @@ interface Config {
 }
 
 const config: Config = {
-    '.css': ['CSS'],
+    '.css':  ['CSS'],
     '.scss': ['CSS'],
     '.sass': ['CSS'],
     '.html': ['HTML'],
-    '.js': ['JavaScript', /(?:^|\n|\r)\/\/.*(?:\r|\n|$)/g],
-    '.jsx': ['JavaScript JSX'],
-    '.ts': ['TypeScript', /(?:^|\n|\r)\/\/.*(?:\r|\n|$)/g],  // /(?:^|\n|\r)\s*\/\*[\s\S]*?\*\/\s*(?:\r|\n|$)/g
-    '.tsx': ['TypeScript JSX'],
+    '.js':   ['JavaScript', /\/\*.+?\*\/|\/\/.*(?=[\n\r])/g],
+    '.jsx':  ['JavaScript JSX'],
+    '.ts':   ['TypeScript', /\/\*.+?\*\/|\/\/.*(?=[\n\r])/g],
+    '.tsx':  ['TypeScript JSX'],
     '.json': ['JSON'],
-    '.md': ['MarkDown'],
-    '.php': ['PHP'],
-    '.vue': ['Vue'],
-    '.yml': ['YML']
+    '.md':   ['MarkDown'],
+    '.php':  ['PHP'],
+    '.rs':   ['Rust'],
+    '.go':   ['Go'],
+    '.py':   ['Python'],
+    '.sh':   ['Shell'],
+    '.vue':  ['Vue'],
+    '.yml':  ['YML']
 }
 
 export default config

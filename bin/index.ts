@@ -6,19 +6,6 @@ import output from '../src/output'
 import config from '../src/config'
 
 
-const getFiles = (fileTree: Tree[]): Tree[] => {
-    let files = []
-    fileTree.forEach((item) => {
-        if(item.type === 'file') {
-            files.push(item)
-        }else {
-            files = files.concat(getFiles(item.children))
-        }
-    })
-    return files
-}
-
-
 interface Result extends Parse {
     files: number
 }
@@ -45,17 +32,28 @@ const merge = (lang: string, { code, comment, blank, lines }: Parse) => {
     result[lang].files += 1
 }
 
+
+const getFiles = (fileTree: Tree[]): Tree[] => {
+    let files = []
+    fileTree.forEach((item) => {
+        if(item.type === 'file') {
+            config[item.extension] && files.push(item)
+        }else {
+            files = files.concat(getFiles(item.children))
+        }
+    })
+    return files
+}
+
+
 const files = getFiles(tree(process.cwd(), {
     filter: /node_modules|\.git/
 }))
 
+
 files.forEach((file) => {
     const conf = config[file.extension]
-    if(conf) {
-        merge(conf[0], parse(file.path, conf[1]))
-    }else {
-        merge('Other', parse(file.path))
-    }
+    merge(conf[0], parse(file.path, conf[1]))
 })
 
 output(result)

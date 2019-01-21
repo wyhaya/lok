@@ -13,7 +13,7 @@ export default (filePath: string, commentReg?: RegExp): Parse => {
 
     const content = fs.readFileSync(filePath, 'utf8')
 
-    let blank = (content.match(/\n\s*\n/g) || []).length
+    let blank = (content.match(/(^[\t|\s]*\n)/gm) || []).length
 
     let comment = 0
     if(commentReg) {
