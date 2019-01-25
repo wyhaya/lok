@@ -28,4 +28,4 @@ jobs:
           command: yarn build
       - run:
           name: bin
-          command: cd ./dist/ && yarn link && rots
+          command: cd ./dist/ && chmod 777 ./bin/index.js && ./bin/index.js
