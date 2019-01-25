@@ -33,28 +33,22 @@ const merge = (lang: string, { code, comment, blank, lines }: Parse) => {
 }
 
 
-const getFiles = (fileTree: Tree[]): Tree[] => {
-    let files = []
-    fileTree.forEach((item) => {
-        if(item.type === 'file') {
-            config[item.extension] && files.push(item)
+const forEachFile = (files: Tree[]): void => {
+    files.forEach((file) => {
+        if(file.type === 'file') {
+            const conf = config[file.extension]
+            conf && merge(conf[0], parse(file.path, conf[1]))
         }else {
-            files = files.concat(getFiles(item.children))
+            forEachFile(file.children)
         }
     })
-    return files
 }
 
 
-const files = getFiles(tree(process.cwd(), {
+forEachFile(tree(process.cwd(), {
     filter: /node_modules|\.git/
 }))
 
-
-files.forEach((file) => {
-    const conf = config[file.extension]
-    merge(conf[0], parse(file.path, conf[1]))
-})
 
 output(result)
 

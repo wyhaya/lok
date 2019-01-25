@@ -4,15 +4,14 @@ jobs:
     docker:
       - image: circleci/node:latest
     branches:
-      ignore:
-        - gh-pages
-        - /release\/.*/
+      only:
+        - master
     steps:
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
       - run:
-          name: install dependences
+          name: install
           command: yarn
       - save_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
@@ -21,3 +20,12 @@ jobs:
       - run:
           name: test
           command: yarn test
+      - run:
+          name: codecov
+          command: ./node_modules/.bin/codecov
+      - run:
+          name: build
+          command: yarn build
+      - run:
+          name: bin
+          command: cd ./dist/ && yarn link && rots

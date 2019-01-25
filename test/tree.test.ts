@@ -1,9 +1,42 @@
 
 
+import * as path from 'path'
 import tree from '../src/tree'
 
-test('tree', () => {
-    expect(0).toBe(0)
+
+test('tree -> generate', () => {
+
+    const map = tree(path.resolve(__dirname, '../src'))
+    expect(typeof map).toBe('object')
+
+})
+
+
+test('tree -> tree object', () => {
+
+    const map = tree(path.resolve(__dirname, '../src'))
+    expect(map.length).toBe(5)
+
+    map.forEach((item) => {
+        expect(item.type).toBe('file')
+        expect(item.extension).toBe('.ts')
+        expect(item.children).toEqual([])
+        expect(typeof item.size).toBe('number')
+    })
+
+})
+
+
+test('filter', () => {
+
+    const map = tree(process.cwd(), {
+        filter: /git|node_modules/
+    }).filter(item => {
+        return /git/.test(item.name)
+    }).length
+
+    expect(map).toBe(0)
+
 })
 
 

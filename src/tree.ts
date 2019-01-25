@@ -16,7 +16,7 @@ export interface Tree {
     children: Tree[]
 }
 
-const isReg = reg => {
+const isReg = (reg) => {
     return typeof reg === 'object' && reg.constructor == RegExp
 }
 
