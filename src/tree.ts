@@ -16,39 +16,59 @@ export interface Tree {
     children: Tree[]
 }
 
+
+async function readdir(dir: string): Promise<string[]> {
+    return new Promise((success) => {
+        fs.readdir(dir, 'utf8', (err, files) => {
+            success(files)
+        })
+    })
+}
+
+async function stat(filePath: string): Promise<fs.Stats> {
+    return new Promise((success) => {
+        fs.stat(filePath, (err, stats) => {
+            success(stats)
+        })
+    })
+}
+
 const isReg = (reg) => {
     return typeof reg === 'object' && reg.constructor == RegExp
 }
 
-function tree(dir: string, option?: Option): Tree[] {
+const tree = (dir: string, option?: Option): Promise<Tree[]> => new Promise(async (success) => {
 
     option = option || {}
 
-    const files = fs.readdirSync(dir, 'utf8')
+    const files = await readdir(dir)
+    const result: Tree[] = []
 
-    return files.map((fileName): any => {
+    for (let i = 0; i < files.length; i++) {
 
-        const fileStat = fs.statSync(`${dir}/${fileName}`)
+        const fileName = files[i]
+        const fileStat = await stat(`${dir}/${fileName}`)
         const isDirectory = fileStat.isDirectory()
 
-        if (option.filter && isReg(option.filter)) {
-            if (option.filter.test(fileName) === true) {
-                return false
-            }
+        if (isReg(option.filter) && option.filter.test(fileName)) {
+            continue
         }
 
-        return {
+        result.push({
             name: fileName,
             path: path.resolve(dir, fileName),
             type: isDirectory ? 'directory' : 'file',
             size: fileStat.size,
             extension: isDirectory ? null : path.extname(fileName),
-            children: isDirectory ? tree(`${dir}/${fileName}`, option) : []
-        }
+            children: isDirectory ? await tree(`${dir}/${fileName}`, option) : []
+        })
 
-    }).filter(Boolean)
+    }
 
-}
+    success(result)
+})
+
+
 
 export default tree
 

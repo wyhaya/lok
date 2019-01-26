@@ -4,10 +4,10 @@ import * as path from 'path'
 import parse from '../src/parse'
 import config from '../src/config'
 
-test('psrse -> JavaScript', () => {
+test('psrse -> JavaScript', async () => {
 
     const filePath = path.resolve(__dirname, './__code/main.js')
-    const JavaScript = parse(filePath, config['.js'][1])
+    const JavaScript = await parse(filePath, config['.js'][1])
 
     expect(JavaScript.lines).toBe(12)
     expect(JavaScript.blank).toBe(4)
@@ -16,10 +16,10 @@ test('psrse -> JavaScript', () => {
 
 })
 
-test('psrse -> TypeScript', () => {
+test('psrse -> TypeScript', async () => {
 
     const filePath = path.resolve(__dirname, './__code/main.ts')
-    const TypeScript = parse(filePath, config['.ts'][1])
+    const TypeScript = await parse(filePath, config['.ts'][1])
 
     expect(TypeScript.lines).toBe(12)
     expect(TypeScript.blank).toBe(4)

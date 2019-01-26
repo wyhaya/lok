@@ -11,6 +11,10 @@
     "bin": {
         "rots": "./bin/index.js"
     },
+    "jest": {
+        "preset": "ts-jest",
+        "testEnvironment": "node"
+    },
     "dependencies": {
         "chalk": "^2.4.2"
     },

@@ -17,16 +17,34 @@
 ## Install
 
 ```shell
-$ yarn global add rots
+yarn global add rots
 ```
 
 ## Use
 
 Go to your project in the terminal and type rots on the command line
 
-```shell
-$ cd your-project
-$ rots
+```bash
+cd your-project
+rots
+```
+
+If you want to ignore files
+
+```bash
+rots --ignore node_modules dist
+```
+
+If you want to count a language separately
+
+```bash
+rots --ext .ts .js
+```
+
+If you want to output a table with three primary colors
+
+```bash
+rots --color
 ```
 
 ## License

@@ -1,7 +1,6 @@
 
 
 import { Parse } from './parse'
-import outputColor from './color'
 
 interface Result extends Parse {
     files: number
@@ -22,9 +21,10 @@ function fillRow(left: string, right: string): string {
 }
 
 
-export default (data: { [key: string]: Result }): void => {
+export default (data: { [key: string]: Result }): string => {
 
     const result: Result[] = []
+    const content = []
 
     for (let x in data) {
         data[x].language = x
@@ -32,14 +32,11 @@ export default (data: { [key: string]: Result }): void => {
     }
 
     result.sort((x, y) => {
-        if(x.language === 'Other') {
-            return 1
-        }
         return x.language.charAt(0) > y.language.charAt(0) ? 1 : -1
     })
 
-    outputColor(fillRow('┌', '┐'))
-    outputColor(
+    content.push(fillRow('┌', '┐'))
+    content.push(
         '│ ' + 
         fill('Language', true) + 
         fill('Code') + 
@@ -49,10 +46,10 @@ export default (data: { [key: string]: Result }): void => {
         fill('Files') + 
         ' │'
     )
-    outputColor(fillRow('├', '┤'))
+    content.push(fillRow('├', '┤'))
 
     result.forEach((item) => {
-        outputColor(
+        content.push(
             '│ ' +
             fill(item.language, true) +
             fill(item.code) +
@@ -74,8 +71,8 @@ export default (data: { [key: string]: Result }): void => {
         return next
     })
 
-    outputColor(fillRow('├', '┤'))
-    outputColor(
+    content.push(fillRow('├', '┤'))
+    content.push(
         '│ ' + 
         fill('Total', true) + 
         fill(total.code) + 
@@ -85,7 +82,9 @@ export default (data: { [key: string]: Result }): void => {
         fill(total.files) + 
         ' │'
     )
-    outputColor(fillRow('└', '┘'))
+    content.push(fillRow('└', '┘'))
+
+    return content.join('\n')
 
 }
 
