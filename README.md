@@ -10,9 +10,9 @@
 
 ## Features
 
-* Fast calculation
+* Quickly calculate data
 * Support multiple languages
-* Very beautiful user interface
+* Beautiful user interface
 
 ## Install
 
@@ -29,23 +29,50 @@ cd your-project
 rots
 ```
 
-If you want to ignore files
-
 ```bash
+# If you want to ignore files
 rots --ignore node_modules dist
 ```
 
-If you want to count a language separately
-
 ```bash
+# If you want to count a language separately
 rots --ext .ts .js
 ```
 
-If you want to output a table with three primary colors
-
 ```bash
+# If you want to output a table with three primary colors
 rots --color
 ```
+
+## Supported Languages
+
+<table>
+    <tr>
+        <td><code>.css</code></td>
+        <td><code>.scss</code></td>
+        <td><code>.sass</code></td>
+        <td><code>.html</code></td>
+        <td><code>.js</code></td>
+        <td><code>.jsx</code></td>
+    </tr>
+    <tr>
+        <td><code>.json</code></td>
+        <td><code>.php</code></td>
+        <td><code>.rs</code></td>
+        <td><code>.go</code></td>
+        <td><code>.ts</code></td>
+        <td><code>.tsx</code></td>
+    </tr>
+     </tr>
+        <td><code>.md</code></td>
+        <td><code>.py</code></td>
+        <td><code>.sh</code></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+          
 
 ## License
 

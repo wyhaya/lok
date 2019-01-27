@@ -12,9 +12,9 @@ test('tree -> generate', () => {
 })
 
 
-test('tree -> tree object', async () => {
+test('tree -> tree object', () => {
 
-    const map = await tree(path.resolve(__dirname, '../src'))
+    const map = tree(path.resolve(__dirname, '../src'))
     expect(map.length).toBe(6)
 
     map.forEach((item) => {
@@ -27,9 +27,9 @@ test('tree -> tree object', async () => {
 })
 
 
-test('filter', async () => {
+test('filter', () => {
 
-    const map = await tree(process.cwd(), {
+    const map = tree(process.cwd(), {
         filter: /git|node_modules/
     })
     const length = map.filter(item => {

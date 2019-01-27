@@ -1,30 +1,27 @@
 
 
-import * as path from 'path'
 import parse from '../src/parse'
 import config from '../src/config'
 
-test('psrse -> JavaScript', async () => {
+test('psrse -> JavaScript', () => {
 
-    const filePath = path.resolve(__dirname, './__code/main.js')
-    const JavaScript = await parse(filePath, config['.js'][1])
+    const JavaScript = parse('test/__code/main.js', config['.js'][1], config['.js'][2])
 
     expect(JavaScript.lines).toBe(12)
-    expect(JavaScript.blank).toBe(4)
-    expect(JavaScript.comment).toBe(1)
-    expect(JavaScript.code).toBe(0)
+    expect(JavaScript.blank).toBe(6)
+    expect(JavaScript.comment).toBe(4)
+    expect(JavaScript.code).toBe(2)
 
 })
 
-test('psrse -> TypeScript', async () => {
+test('psrse -> TypeScript', () => {
 
-    const filePath = path.resolve(__dirname, './__code/main.ts')
-    const TypeScript = await parse(filePath, config['.ts'][1])
+    const TypeScript = parse('test/__code/main.ts', config['.ts'][1], config['.ts'][2])
 
     expect(TypeScript.lines).toBe(12)
-    expect(TypeScript.blank).toBe(4)
-    expect(TypeScript.comment).toBe(1)
-    expect(TypeScript.code).toBe(0)
+    expect(TypeScript.blank).toBe(6)
+    expect(TypeScript.comment).toBe(4)
+    expect(TypeScript.code).toBe(2)
 
 })
 

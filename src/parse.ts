@@ -10,32 +10,54 @@ export interface Parse {
 }
 
 
-async function readFile(filePath: string): Promise<string> {
-    return new Promise((success) => {
-        fs.readFile(filePath, 'utf8', (err, data) => {
-            success(data)
-        })
-    })
-}
+export default (filePath: string, singleLine?: RegExp, multiLine?: [RegExp, RegExp]): Parse => {
 
+    const content = fs.readFileSync(filePath, 'utf8').split('\n')
 
-export default (filePath: string, commentReg?: RegExp): Promise<Parse> => new Promise(async (success) => {
-
-    const content = await readFile(filePath)
-
-    let blank = (content.match(/(^[\t|\s]*\n)/gm) || []).length
-
+    let blank = 0
     let comment = 0
-    if (commentReg) {
-        comment = (content.match(commentReg) || []).length
-    }
+    let code = 0
+    let isCommment = false
 
-    success({
-        code: 0,
+    content.forEach((l) => {
+
+        if (/^\s*$/.test(l)) {
+            blank += 1
+            return
+        }
+
+        if(multiLine) {
+            if (multiLine[0].test(l)) {
+                isCommment = true
+            }
+           
+            if (multiLine[1].test(l)) {
+                isCommment = false
+                comment += 1
+                return
+            }
+
+            if (isCommment) {
+                comment += 1
+                return
+            }
+        }
+
+        if (singleLine && singleLine.test(l)) {
+            comment += 1
+            return
+        }
+
+        code += 1
+
+    })
+
+    return {
+        code,
         comment,
         blank,
-        lines: content.split('\n').length
-    })
+        lines: content.length
+    }
 
-})
+}
 

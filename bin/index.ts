@@ -46,37 +46,32 @@ const ext = Array.isArray(argExt) ?
     :
     configExts
 
-const forEachFile = (files: Tree[]) => new Promise(async (success) => {
+const forEachFile = (files: Tree[]) =>  {
 
     for (let i = 0; i < files.length; i++) {
 
         const file = files[i]
         if (file.type === 'directory') {
-            await forEachFile(file.children)
+            forEachFile(file.children)
             continue
         }
-
-        const conf = config[file.extension]
-        ext.includes(file.extension) && merge(conf[0], await parse(file.path, conf[1]))
+        if(ext.includes(file.extension)) {
+            const [langName, singleLine, multiLine] = config[file.extension]
+            merge(langName, parse(file.path, singleLine, multiLine))
+        }
 
     }
 
-    success()
-
-})
+}
 
 
-!(async () => {
+forEachFile(tree(process.cwd(), {
+    filter: Array.isArray(argIgnore) ? new RegExp(argIgnore.join('|')) : undefined
+}))
 
-    await forEachFile(await tree(process.cwd(), {
-        filter: Array.isArray(argIgnore) ? new RegExp(argIgnore.join('|')) : undefined
-    }))
 
-    argColor ?
-        color(table(result))
-        :
-        console.log(table(result))
-
-})()
-
+argColor ?
+    color(table(result))
+    :
+    console.log(table(result))
 
