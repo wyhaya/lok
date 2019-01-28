@@ -4,22 +4,18 @@ import * as path from 'path'
 import * as fs from 'fs'
 
 interface Option {
-    filter?: RegExp
+    ignore?: RegExp,
+    ext?: string[]
 }
 
 export interface Tree {
     name: string
     path: string,
     type: 'directory' | 'file'
-    size: number
     extension: string | null
     children: Tree[]
 }
 
-
-const isReg = (reg) => {
-    return typeof reg === 'object' && reg.constructor == RegExp
-}
 
 const tree = (dir: string, option?: Option): Tree[]  => {
 
@@ -32,19 +28,23 @@ const tree = (dir: string, option?: Option): Tree[]  => {
 
         const fileName = files[i]
 
-        if (isReg(option.filter) && option.filter.test(fileName)) {
+        if (option.ignore && option.ignore.test(fileName)) {
             continue
         }
-        
+
+        const ext = path.extname(fileName)
         const fileStat = fs.statSync(`${dir}/${fileName}`)
         const isDirectory = fileStat.isDirectory()
+
+        if(option.ext && !isDirectory && !option.ext.includes(ext)) {
+            continue
+        }
 
         result.push({
             name: fileName,
             path: path.resolve(dir, fileName),
             type: isDirectory ? 'directory' : 'file',
-            size: fileStat.size,
-            extension: isDirectory ? null : path.extname(fileName),
+            extension: isDirectory ? null : ext,
             children: isDirectory ? tree(`${dir}/${fileName}`, option) : []
         })
 

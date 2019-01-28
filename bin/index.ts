@@ -40,33 +40,40 @@ const merge = (lang: string, { code, comment, blank, lines }: Parse) => {
 }
 
 
-const configExts = Object.keys(config)
-const ext = Array.isArray(argExt) ?
-    argExt.filter((ext) => configExts.includes(ext))
-    :
-    configExts
-
 const forEachFile = (files: Tree[]) =>  {
 
     for (let i = 0; i < files.length; i++) {
 
         const file = files[i]
+       
         if (file.type === 'directory') {
             forEachFile(file.children)
             continue
         }
-        if(ext.includes(file.extension)) {
-            const [langName, singleLine, multiLine] = config[file.extension]
-            merge(langName, parse(file.path, singleLine, multiLine))
-        }
+        
+        const [langName, singleLine, multiLine] = config[file.extension]
+        merge(langName, parse(file.path, singleLine, multiLine))
 
     }
 
 }
 
+// Which files are ignored
+const ignore = Array.isArray(argIgnore) ? 
+    new RegExp(argIgnore.join('|')) 
+    :
+    undefined
+
+// Total available file extensions
+const ext = Array.isArray(argExt) ?
+    argExt.filter((ext) => Object.keys(config).includes(ext))
+    :
+    Object.keys(config)
+
 
 forEachFile(tree(process.cwd(), {
-    filter: Array.isArray(argIgnore) ? new RegExp(argIgnore.join('|')) : undefined
+    ignore, 
+    ext
 }))
 
 
