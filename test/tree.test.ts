@@ -2,14 +2,12 @@
 
 import tree from '../src/tree'
 
-
 test('tree -> generate', () => {
 
     const map = tree('./src')
     expect(Array.isArray(map)).toBeTruthy()
 
 })
-
 
 test('tree -> tree object', () => {
 
@@ -26,7 +24,6 @@ test('tree -> tree object', () => {
 
 })
 
-
 test('tree -> ignore', () => {
 
     const map = tree(process.cwd(), {
@@ -38,7 +35,6 @@ test('tree -> ignore', () => {
     expect(length).toBe(0)
 
 })
-
 
 test('tree -> ext', () => {
 

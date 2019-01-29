@@ -7,7 +7,9 @@ interface Result extends Parse {
     language?: string
 }
 
+
 const max = 14
+
 
 function fill(content: string | number, isPadEnd?: boolean): string {
     return isPadEnd === true ?
@@ -15,6 +17,7 @@ function fill(content: string | number, isPadEnd?: boolean): string {
         :
         content.toString().padStart(max, ' ')
 }
+
 
 function fillRow(left: string, right: string): string {
     return left + '─'.padEnd(max * 6 + 2, '─') + right
@@ -35,19 +38,21 @@ export default (data: { [key: string]: Result }): string => {
         return x.language.charAt(0) > y.language.charAt(0) ? 1 : -1
     })
 
+    // Header
     content.push(fillRow('┌', '┐'))
     content.push(
-        '│ ' + 
-        fill('Language', true) + 
-        fill('Code') + 
-        fill('Comment') + 
-        fill('Blank') + 
-        fill('Lines') + 
-        fill('Files') + 
+        '│ ' +
+        fill('Language', true) +
+        fill('Code') +
+        fill('Comment') +
+        fill('Blank') +
+        fill('Lines') +
+        fill('Files') +
         ' │'
     )
     content.push(fillRow('├', '┤'))
 
+    // Content
     result.forEach((item) => {
         content.push(
             '│ ' +
@@ -61,7 +66,7 @@ export default (data: { [key: string]: Result }): string => {
         )
     })
 
-    const total = result.reduce((prev, next) => {
+    const total = result.length > 0 ? result.reduce((prev, next) => {
         next = { ...next }
         next.code += prev.code
         next.comment += prev.comment
@@ -69,17 +74,24 @@ export default (data: { [key: string]: Result }): string => {
         next.lines += prev.lines
         next.files += prev.files
         return next
-    })
+    }) : {
+            code: 0,
+            comment: 0,
+            blank: 0,
+            lines: 0,
+            files: 0
+        }
 
+    // Footer
     content.push(fillRow('├', '┤'))
     content.push(
-        '│ ' + 
-        fill('Total', true) + 
-        fill(total.code) + 
-        fill(total.comment) + 
-        fill(total.blank) + 
-        fill(total.lines) + 
-        fill(total.files) + 
+        '│ ' +
+        fill('Total', true) +
+        fill(total.code) +
+        fill(total.comment) +
+        fill(total.blank) +
+        fill(total.lines) +
+        fill(total.files) +
         ' │'
     )
     content.push(fillRow('└', '┘'))
