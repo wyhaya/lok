@@ -6,7 +6,8 @@
 
 `rots` is a command line tool that is used to quickly calculate the number of lines of various language codes in a project
 
-![preview](https://user-images.githubusercontent.com/23690145/51724031-757fbe00-2096-11e9-960c-0172f2307802.png)
+![preview](https://user-images.githubusercontent.com/23690145/51882818-3c5b8c80-23bb-11e9-8da6-5e7b19a7f536.png)
+
 
 ## Features
 

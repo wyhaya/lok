@@ -10,44 +10,28 @@ interface Config {
 
 const config: Config = {
     '.css': [
-        'CSS',
-        void 0,
-        [/\/\*/, /\*\//]
+        'CSS', void 0, [/\/\*/, /\*\//]
     ],
     '.scss': [
-        'CSS',
-        /^\s*\/\//,
-        [/\/\*/, /\*\//]
+        'CSS', /^\s*\/\//, [/\/\*/, /\*\//]
     ],
     '.sass': [
-        'CSS',
-        /^\s*\/\//,
-        [/\/\*/, /\*\//]
+        'CSS', /^\s*\/\//, [/\/\*/, /\*\//]
     ],
     '.html': [
-        'HTML',
-        void 0,
-        [/<!--/, /-->/]
+        'HTML', void 0, [/<!--/, /-->/]
     ],
     '.js': [
-        'JavaScript',
-        /^\s*\/\//,
-        [/\/\*/, /\*\//]
+        'JavaScript', /^\s*\/\//, [/\/\*/, /\*\//]
     ],
     '.jsx': [
-        'JavaScript JSX',
-        /^\s*\/\//,
-        [/{?\/\*/, /\*\/}?/]
+        'JavaScript JSX', /^\s*\/\//, [/{?\/\*/, /\*\/}?/]
     ],
     '.ts': [
-        'TypeScript',
-        /^\s*\/\//,
-        [/\/\*/, /\*\//]
+        'TypeScript', /^\s*\/\//, [/\/\*/, /\*\//]
     ],
     '.tsx': [
-        'TypeScript JSX',
-        /^\s*\/\//,
-        [/{?\/\*/, /\*\/}?/]
+        'TypeScript JSX', /^\s*\/\//, [/{?\/\*/, /\*\/}?/]
     ],
     '.json': [
         'JSON'
@@ -56,31 +40,72 @@ const config: Config = {
         'MarkDown'
     ],
     '.php': [
-        'PHP',
-        /^\s*\/\/|#/,
-        [/\/\*/, /\*\//]
+        'PHP', /^\s*\/\/|#/, [/\/\*/, /\*\//]
     ],
     '.rs': [
-        'Rust',
-        /^\s*\/\//,
-        [/\/\*/, /\*\//]
+        'Rust', /^\s*\/\//, [/\/\*/, /\*\//]
     ],
     '.go': [
-        'Go',
-        /^\s*\/\//,
-        [/\/\*/, /\*\//]
+        'Go', /^\s*\/\//, [/\/\*/, /\*\//]
     ],
     '.py': [
-        'Python',
-        /^\s*#/
+        'Python', /^\s*#/
     ],
     '.sh': [
-        'Shell',
-        /^\s*#/
+        'Shell', /^\s*#/
     ],
     '.yml': [
-        'YML',
-        /^\s*#/
+        'YML', /^\s*#/
+    ],
+    '.swift': [
+        'Swift', /^\s*\/\//, [/\/\*/, /\*\//]
+    ],
+
+    // undone ...
+    '.c': [
+        'C'
+    ],
+    '.coffee': [
+        'CoffeeScript'
+    ],
+    '.dart': [
+        'Dart'
+    ],
+    '.docker': [
+        'Docker'
+    ],
+    '.java': [
+        'Java'
+    ],
+    '.less': [
+        'Less'
+    ],
+    '.lua': [
+        'Lua'
+    ],
+    '.m': [
+        'ObjectiveC'
+    ],
+    '.aspx': [
+        'AspNet'
+    ],
+    '.makefile': [
+        'Makefile'
+    ],
+    '.sc': [
+        'Scala'
+    ],
+    '.sql': [
+        'Sql'
+    ],
+    '.styl': [
+        'Stylus'
+    ],
+    '.vim': [
+        'VimScript'
+    ],
+    '.xml': [
+        'XML'
     ]
 }
 
