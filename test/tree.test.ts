@@ -3,17 +3,13 @@
 import tree from '../src/tree'
 
 test('tree -> generate', () => {
-
     const map = tree('./src')
     expect(Array.isArray(map)).toBeTruthy()
-
 })
 
 test('tree -> tree object', () => {
-
     const map = tree('./src')
     expect(map.length).toBe(6)
-
     map.forEach((item) => {
         expect(item.type).toBe('file')
         expect(item.extension).toBe('.ts')
@@ -21,11 +17,9 @@ test('tree -> tree object', () => {
         expect(typeof item.name).toBe('string')
         expect(typeof item.path).toBe('string')
     })
-
 })
 
 test('tree -> ignore', () => {
-
     const map = tree(process.cwd(), {
         ignore: /git|node_modules/
     })
@@ -33,11 +27,9 @@ test('tree -> ignore', () => {
         return /git|node_modules/.test(item.name)
     }).length
     expect(length).toBe(0)
-
 })
 
 test('tree -> ext', () => {
-
     const js = tree('./src', {
         ext: ['.js']
     }).length
@@ -50,6 +42,5 @@ test('tree -> ext', () => {
         return file
     })
     expect(ts.length).toBe(6)
-
 })
 

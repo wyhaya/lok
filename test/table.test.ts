@@ -20,15 +20,12 @@ const data = {
 }
 
 test('table -> length', () => {
-
     table(data).split('\n').forEach((line) => {
         expect(line.length).toBe(88)
     })
-
 })
 
 test('table -> content', () => {
-
     const result = table(data).split('\n')
     result.shift()
     result.shift()
@@ -36,21 +33,19 @@ test('table -> content', () => {
     result.pop()
     result.pop()
     result.pop()
+    expect(result.length).toBe(2)
     result.forEach((line) => {
         line.match(/\d+/g).forEach((n) => {
             expect(parseInt(n)).toBe(100)
         })
     })
-
 })
 
 test('table -> total', () => {
-
     const result = table(data).split('\n')
     result[6].match(/\d+/g).forEach((n) => {
         expect(parseInt(n)).toBe(200)
     })
-
 })
 
 

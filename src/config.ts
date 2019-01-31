@@ -62,51 +62,51 @@ const config: Config = {
     ],
 
     // undone ...
-    '.c': [
-        'C'
-    ],
-    '.coffee': [
-        'CoffeeScript'
-    ],
-    '.dart': [
-        'Dart'
-    ],
-    '.docker': [
-        'Docker'
-    ],
-    '.java': [
-        'Java'
-    ],
-    '.less': [
-        'Less'
-    ],
-    '.lua': [
-        'Lua'
-    ],
-    '.m': [
-        'ObjectiveC'
-    ],
-    '.aspx': [
-        'AspNet'
-    ],
-    '.makefile': [
-        'Makefile'
-    ],
-    '.sc': [
-        'Scala'
-    ],
-    '.sql': [
-        'Sql'
-    ],
-    '.styl': [
-        'Stylus'
-    ],
-    '.vim': [
-        'VimScript'
-    ],
-    '.xml': [
-        'XML'
-    ]
+    // '.c': [
+    //     'C'
+    // ],
+    // '.coffee': [
+    //     'CoffeeScript'
+    // ],
+    // '.dart': [
+    //     'Dart'
+    // ],
+    // '.docker': [
+    //     'Docker'
+    // ],
+    // '.java': [
+    //     'Java'
+    // ],
+    // '.less': [
+    //     'Less'
+    // ],
+    // '.lua': [
+    //     'Lua'
+    // ],
+    // '.m': [
+    //     'ObjectiveC'
+    // ],
+    // '.aspx': [
+    //     'AspNet'
+    // ],
+    // '.makefile': [
+    //     'Makefile'
+    // ],
+    // '.sc': [
+    //     'Scala'
+    // ],
+    // '.sql': [
+    //     'Sql'
+    // ],
+    // '.styl': [
+    //     'Stylus'
+    // ],
+    // '.vim': [
+    //     'VimScript'
+    // ],
+    // '.xml': [
+    //     'XML'
+    // ]
 }
 
 export default config
