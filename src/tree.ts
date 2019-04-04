@@ -4,13 +4,13 @@ import * as path from 'path'
 import * as fs from 'fs'
 
 interface Option {
-    ignore?: RegExp,
+    ignore?: RegExp
     ext?: string[]
 }
 
 export interface Tree {
     name: string
-    path: string,
+    path: string
     type: 'directory' | 'file'
     extension: string | null
     children: Tree[]

@@ -6,7 +6,8 @@
     "scripts": {
         "dev": "ts-node ./bin/index.ts",
         "build": "tsc && cp package.json ./dist/ && cp LICENSE ./dist/ && cp README.md ./dist/",
-        "test": "jest"
+        "test": "jest",
+        "fix": "eslint --ext .ts ./ --fix"
     },
     "bin": {
         "rots": "./bin/index.js"
@@ -21,11 +22,15 @@
     "devDependencies": {
         "@types/jest": "^23.3.13",
         "@types/node": "^10.12.18",
+        "@typescript-eslint/eslint-plugin": "^1.6.0",
+        "@typescript-eslint/parser": "^1.6.0",
         "codecov": "^3.1.0",
+        "eslint": "^5.16.0",
+        "eslint-plugin-react": "^7.12.4",
         "jest": "^23.6.0",
         "ts-jest": "^23.10.5",
         "ts-node": "^7.0.1",
-        "typescript": "^3.2.4"
+        "typescript": "^3.4.1"
     },
     "keywords": [
         "count",

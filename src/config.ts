@@ -59,7 +59,7 @@ const config: Config = {
     ],
     '.swift': [
         'Swift', /^\s*\/\//, [/\/\*/, /\*\//]
-    ],
+    ]
 
     // undone ...
     // '.c': [

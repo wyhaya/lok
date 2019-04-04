@@ -6,6 +6,6 @@
     comment
 */
 
-const A: number = 0
-const B: number = 0
+const A = 0
+console.log(A)
 

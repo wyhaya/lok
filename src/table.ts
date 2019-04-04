@@ -75,12 +75,12 @@ export default (data: { [key: string]: Result }): string => {
         next.files += prev.files
         return next
     }) : {
-            code: 0,
-            comment: 0,
-            blank: 0,
-            lines: 0,
-            files: 0
-        }
+        code: 0,
+        comment: 0,
+        blank: 0,
+        lines: 0,
+        files: 0
+    }
 
     // Footer
     content.push(fillRow('├', '┤'))

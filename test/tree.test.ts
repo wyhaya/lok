@@ -9,7 +9,7 @@ test('tree -> generate', () => {
 
 test('tree -> tree object', () => {
     const map = tree('./src')
-    expect(map.length).toBe(6)
+    expect(map.length).toBe(5)
     map.forEach((item) => {
         expect(item.type).toBe('file')
         expect(item.extension).toBe('.ts')
@@ -41,6 +41,6 @@ test('tree -> ext', () => {
         expect(file.extension).toBe('.ts')
         return file
     })
-    expect(ts.length).toBe(6)
+    expect(ts.length).toBe(5)
 })
 
