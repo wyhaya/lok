@@ -97,6 +97,16 @@ lazy_static! {
     static ref EXTENSIONS: Vec<&'static str> = CONFIGS.iter().map(|item| *item.0).collect();
 }
 
+#[derive(Debug, Clone)]
+struct Result {
+    language: &'static str,
+    blank: i32,
+    comment: i32,
+    code: i32,
+    size: u64,
+    file: i32,
+}
+
 fn main() {
     let app = App::new();
 
@@ -123,14 +133,22 @@ fn main() {
         let r = parse(&t);
         let find = result
             .iter()
-            .position(|item: &Parse| item.language == r.language);
+            .position(|item: &Result| item.language == r.language);
         if let Some(i) = find {
             result[i].comment += r.comment;
             result[i].blank += r.blank;
             result[i].code += r.code;
             result[i].size += r.size;
+            result[i].file += 1;
         } else {
-            result.push(r)
+            result.push(Result {
+                language: r.language,
+                comment: r.comment,
+                blank: r.blank,
+                code: r.code,
+                size: r.size,
+                file: 1,
+            })
         }
     }
 
@@ -151,46 +169,49 @@ macro_rules! total {
 }
 
 struct Total {
-    result: Vec<Parse>,
+    result: Vec<Result>,
 }
 impl Total {
-    fn new(result: Vec<Parse>) -> Total {
+    fn new(result: Vec<Result>) -> Total {
         Total { result }
     }
     total!(code, i32);
     total!(comment, i32);
     total!(blank, i32);
+    total!(file, i32);
     total!(size, u64);
 }
 
-fn output(result: Vec<Parse>) {
-    println!("┌{:─<66}┐", "");
+fn output(result: Vec<Result>) {
+    println!("┌{:─<78}┐", "");
     println!(
-        "| {:<14}{:>12}{:>12}{:>12}{:>14} |",
-        "Language", "Code", "Comment", "Blank", "Size"
+        "| {:<14}{:>12}{:>12}{:>12}{:>12}{:>14} |",
+        "Language", "Code", "Comment", "Blank", "File", "Size"
     );
-    println!("├{:─<66}┤", "");
+    println!("├{:─<78}┤", "");
     for item in result.clone() {
         println!(
-            "| {:<14}{:>12}{:>12}{:>12}{:>14} |",
+            "| {:<14}{:>12}{:>12}{:>12}{:>12}{:>14} |",
             item.language,
             item.code,
             item.comment,
             item.blank,
+            item.file,
             bytes_to_size(item.size as f64)
         );
     }
-    println!("├{:─<66}┤", "");
+    println!("├{:─<78}┤", "");
     let total = Total::new(result.clone());
     println!(
-        "| {:<14}{:>12}{:>12}{:>12}{:>14} |",
+        "| {:<14}{:>12}{:>12}{:>12}{:>12}{:>14} |",
         "Total",
         total.code(),
         total.comment(),
         total.blank(),
+        total.file(),
         bytes_to_size(total.size() as f64)
     );
-    println!("└{:─<66}┘", "");
+    println!("└{:─<78}┘", "");
 }
 
 fn bytes_to_size(bytes: f64) -> String {
