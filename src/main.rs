@@ -9,6 +9,8 @@ extern crate lazy_static;
 #[macro_use]
 mod app;
 use app::App;
+mod output;
+use output::{Output, OutputFormat};
 
 macro_rules! regex {
     ($reg:expr) => {{
@@ -98,7 +100,7 @@ lazy_static! {
 }
 
 #[derive(Debug, Clone)]
-struct Result {
+pub struct Result {
     language: &'static str,
     blank: i32,
     comment: i32,
@@ -153,75 +155,7 @@ fn main() {
     }
 
     dbg!(t.elapsed());
-    output(result);
-}
-
-macro_rules! total {
-    ($name: ident, $type: path) => {
-        fn $name(&self) -> $type {
-            let mut n = 0;
-            for item in &self.result {
-                n += item.$name
-            }
-            n
-        }
-    };
-}
-
-struct Total {
-    result: Vec<Result>,
-}
-impl Total {
-    fn new(result: Vec<Result>) -> Total {
-        Total { result }
-    }
-    total!(code, i32);
-    total!(comment, i32);
-    total!(blank, i32);
-    total!(file, i32);
-    total!(size, u64);
-}
-
-fn output(result: Vec<Result>) {
-    println!("┌{:─<78}┐", "");
-    println!(
-        "| {:<14}{:>12}{:>12}{:>12}{:>12}{:>14} |",
-        "Language", "Code", "Comment", "Blank", "File", "Size"
-    );
-    println!("├{:─<78}┤", "");
-    for item in result.clone() {
-        println!(
-            "| {:<14}{:>12}{:>12}{:>12}{:>12}{:>14} |",
-            item.language,
-            item.code,
-            item.comment,
-            item.blank,
-            item.file,
-            bytes_to_size(item.size as f64)
-        );
-    }
-    println!("├{:─<78}┤", "");
-    let total = Total::new(result.clone());
-    println!(
-        "| {:<14}{:>12}{:>12}{:>12}{:>12}{:>14} |",
-        "Total",
-        total.code(),
-        total.comment(),
-        total.blank(),
-        total.file(),
-        bytes_to_size(total.size() as f64)
-    );
-    println!("└{:─<78}┘", "");
-}
-
-fn bytes_to_size(bytes: f64) -> String {
-    let k = 1024_f64;
-    let sizes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
-    if bytes <= 1_f64 {
-        return format!("{:.2} B", bytes);
-    }
-    let i = (bytes.ln() / k.ln()) as i32;
-    format!("{:.2} {}", bytes / k.powi(i), sizes[i as usize])
+    Output::new(result).ascii();
 }
 
 #[derive(Debug, Clone)]
