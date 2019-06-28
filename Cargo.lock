@@ -3,73 +3,73 @@
 [[package]]
 name = "aho-corasick"
 version = "0.7.3"
-source = "registry+https://mirrors.ustc.edu.cn/crates.io-index/"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "memchr 2.2.0 (registry+https://mirrors.ustc.edu.cn/crates.io-index/)",
+ "memchr 2.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "lazy_static"
 version = "1.3.0"
-source = "registry+https://mirrors.ustc.edu.cn/crates.io-index/"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "lok"
 version = "0.1.0"
 dependencies = [
- "lazy_static 1.3.0 (registry+https://mirrors.ustc.edu.cn/crates.io-index/)",
- "regex 1.1.7 (registry+https://mirrors.ustc.edu.cn/crates.io-index/)",
+ "lazy_static 1.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "regex 1.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "memchr"
 version = "2.2.0"
-source = "registry+https://mirrors.ustc.edu.cn/crates.io-index/"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "regex"
 version = "1.1.7"
-source = "registry+https://mirrors.ustc.edu.cn/crates.io-index/"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "aho-corasick 0.7.3 (registry+https://mirrors.ustc.edu.cn/crates.io-index/)",
- "memchr 2.2.0 (registry+https://mirrors.ustc.edu.cn/crates.io-index/)",
- "regex-syntax 0.6.7 (registry+https://mirrors.ustc.edu.cn/crates.io-index/)",
- "thread_local 0.3.6 (registry+https://mirrors.ustc.edu.cn/crates.io-index/)",
- "utf8-ranges 1.0.3 (registry+https://mirrors.ustc.edu.cn/crates.io-index/)",
+ "aho-corasick 0.7.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "memchr 2.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "regex-syntax 0.6.7 (registry+https://github.com/rust-lang/crates.io-index)",
+ "thread_local 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "utf8-ranges 1.0.3 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "regex-syntax"
 version = "0.6.7"
-source = "registry+https://mirrors.ustc.edu.cn/crates.io-index/"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "ucd-util 0.1.3 (registry+https://mirrors.ustc.edu.cn/crates.io-index/)",
+ "ucd-util 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "thread_local"
 version = "0.3.6"
-source = "registry+https://mirrors.ustc.edu.cn/crates.io-index/"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "lazy_static 1.3.0 (registry+https://mirrors.ustc.edu.cn/crates.io-index/)",
+ "lazy_static 1.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "ucd-util"
 version = "0.1.3"
-source = "registry+https://mirrors.ustc.edu.cn/crates.io-index/"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "utf8-ranges"
 version = "1.0.3"
-source = "registry+https://mirrors.ustc.edu.cn/crates.io-index/"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [metadata]
-"checksum aho-corasick 0.7.3 (registry+https://mirrors.ustc.edu.cn/crates.io-index/)" = "e6f484ae0c99fec2e858eb6134949117399f222608d84cadb3f58c1f97c2364c"
-"checksum lazy_static 1.3.0 (registry+https://mirrors.ustc.edu.cn/crates.io-index/)" = "bc5729f27f159ddd61f4df6228e827e86643d4d3e7c32183cb30a1c08f604a14"
-"checksum memchr 2.2.0 (registry+https://mirrors.ustc.edu.cn/crates.io-index/)" = "2efc7bc57c883d4a4d6e3246905283d8dae951bb3bd32f49d6ef297f546e1c39"
-"checksum regex 1.1.7 (registry+https://mirrors.ustc.edu.cn/crates.io-index/)" = "0b2f0808e7d7e4fb1cb07feb6ff2f4bc827938f24f8c2e6a3beb7370af544bdd"
-"checksum regex-syntax 0.6.7 (registry+https://mirrors.ustc.edu.cn/crates.io-index/)" = "9d76410686f9e3a17f06128962e0ecc5755870bb890c34820c7af7f1db2e1d48"
-"checksum thread_local 0.3.6 (registry+https://mirrors.ustc.edu.cn/crates.io-index/)" = "c6b53e329000edc2b34dbe8545fd20e55a333362d0a321909685a19bd28c3f1b"
-"checksum ucd-util 0.1.3 (registry+https://mirrors.ustc.edu.cn/crates.io-index/)" = "535c204ee4d8434478593480b8f86ab45ec9aae0e83c568ca81abf0fd0e88f86"
-"checksum utf8-ranges 1.0.3 (registry+https://mirrors.ustc.edu.cn/crates.io-index/)" = "9d50aa7650df78abf942826607c62468ce18d9019673d4a2ebe1865dbb96ffde"
+"checksum aho-corasick 0.7.3 (registry+https://github.com/rust-lang/crates.io-index)" = "e6f484ae0c99fec2e858eb6134949117399f222608d84cadb3f58c1f97c2364c"
+"checksum lazy_static 1.3.0 (registry+https://github.com/rust-lang/crates.io-index)" = "bc5729f27f159ddd61f4df6228e827e86643d4d3e7c32183cb30a1c08f604a14"
+"checksum memchr 2.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "2efc7bc57c883d4a4d6e3246905283d8dae951bb3bd32f49d6ef297f546e1c39"
+"checksum regex 1.1.7 (registry+https://github.com/rust-lang/crates.io-index)" = "0b2f0808e7d7e4fb1cb07feb6ff2f4bc827938f24f8c2e6a3beb7370af544bdd"
+"checksum regex-syntax 0.6.7 (registry+https://github.com/rust-lang/crates.io-index)" = "9d76410686f9e3a17f06128962e0ecc5755870bb890c34820c7af7f1db2e1d48"
+"checksum thread_local 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)" = "c6b53e329000edc2b34dbe8545fd20e55a333362d0a321909685a19bd28c3f1b"
+"checksum ucd-util 0.1.3 (registry+https://github.com/rust-lang/crates.io-index)" = "535c204ee4d8434478593480b8f86ab45ec9aae0e83c568ca81abf0fd0e88f86"
+"checksum utf8-ranges 1.0.3 (registry+https://github.com/rust-lang/crates.io-index)" = "9d50aa7650df78abf942826607c62468ce18d9019673d4a2ebe1865dbb96ffde"

@@ -120,6 +120,11 @@ fn main() {
         return app.print_version();
     }
 
+    let format = match app.format() {
+        Ok(format) => format,
+        Err(_) => exit!("optional value: `ascii` `html` `markdown`"),
+    };
+
     let t = std::time::Instant::now();
 
     let mut result = vec![];
@@ -155,7 +160,12 @@ fn main() {
     }
 
     dbg!(t.elapsed());
-    Output::new(result).ascii();
+
+    match format {
+        OutputFormat::ASCII => Output(result).ascii(),
+        OutputFormat::HTML => Output(result).html(),
+        OutputFormat::MarkDown => Output(result).markdown(),
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -223,11 +233,7 @@ fn parse(file: &DirEntry) -> Parse {
     }
 }
 
-fn tree<P: AsRef<Path>>(
-    dir: P,
-    ext: &Option<Vec<String>>,
-    ignore: &Option<Vec<Regex>>,
-) -> Vec<DirEntry> {
+fn tree<P: AsRef<Path>>(dir: P, ext: &Vec<String>, ignore: &Vec<Regex>) -> Vec<DirEntry> {
     let read_dir = match fs::read_dir(dir) {
         Ok(dir) => dir,
         Err(err) => exit!("{:?}", err),
@@ -246,7 +252,7 @@ fn tree<P: AsRef<Path>>(
             Err(err) => exit!("{:?}", err),
         };
 
-        if let Some(ignore) = ignore {
+        if ignore.len() != 0 {
             let file_name = file.file_name();
             match file_name.to_str() {
                 Some(name) => {
@@ -271,11 +277,13 @@ fn tree<P: AsRef<Path>>(
                 },
                 None => continue,
             };
-            if let Some(ext) = ext {
+
+            if ext.len() != 0 {
                 if !ext.iter().any(|item| item == &e) {
                     continue;
                 }
             }
+
             let any = EXTENSIONS.iter().any(|item| item == &e);
             if any {
                 files.push(file);

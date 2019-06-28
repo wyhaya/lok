@@ -9,7 +9,7 @@ macro_rules! total {
     ($name: ident, $type: path) => {
         fn $name(&self) -> $type {
             let mut n = 0;
-            for item in &self.result {
+            for item in &self.0 {
                 n += item.$name
             }
             n
@@ -17,13 +17,9 @@ macro_rules! total {
     };
 }
 
-struct Total {
-    result: Vec<Result>,
-}
+struct Total(Vec<Result>);
+
 impl Total {
-    fn new(result: Vec<Result>) -> Total {
-        Total { result }
-    }
     total!(code, i32);
     total!(comment, i32);
     total!(blank, i32);
@@ -41,15 +37,9 @@ fn bytes_to_size(bytes: f64) -> String {
     format!("{:.2} {}", bytes / k.powi(i), sizes[i as usize])
 }
 
-pub struct Output {
-    data: Vec<Result>,
-}
+pub struct Output(pub Vec<Result>);
 
 impl Output {
-    pub fn new(data: Vec<Result>) -> Output {
-        Output { data }
-    }
-
     pub fn ascii(&self) {
         println!("┌{:─<78}┐", "");
         println!(
@@ -57,7 +47,7 @@ impl Output {
             "Language", "Code", "Comment", "Blank", "File", "Size"
         );
         println!("├{:─<78}┤", "");
-        for item in self.data.clone() {
+        for item in self.0.clone() {
             println!(
                 "| {:<14}{:>12}{:>12}{:>12}{:>12}{:>14} |",
                 item.language,
@@ -69,7 +59,7 @@ impl Output {
             );
         }
         println!("├{:─<78}┤", "");
-        let total = Total::new(self.data.clone());
+        let total = Total(self.0.clone());
         println!(
             "| {:<14}{:>12}{:>12}{:>12}{:>12}{:>14} |",
             "Total",
@@ -85,33 +75,29 @@ impl Output {
     pub fn html(&self) {
         println!("<table>");
         println!(
-            "
-        <thead>
-            <tr>
-                <th>Language</th>
-                <th>Code</th>
-                <th>Comment</th>
-                <th>Blank</th>
-                <th>File</th>
-                <th>Size</th>
-            </tr>
-        </thead>
-        "
+            "   <thead>
+        <tr>
+            <th>Language</th>
+            <th>Code</th>
+            <th>Comment</th>
+            <th>Blank</th>
+            <th>File</th>
+            <th>Size</th>
+        </tr>
+    </thead>"
         );
 
-        println!("<tbody>");
-        for item in self.data.clone() {
+        println!("    <tbody>");
+        for item in self.0.clone() {
             println!(
-                "
-         <tr>
-                <td>{}</td>
-                <td>{}</td>
-                <td>{}</td>
-                <td>{}</td>
-                <td>{}</td>
-                <td>{}</td>
-            </tr>
-        ",
+                "        <tr>
+            <td>{}</td>
+            <td>{}</td>
+            <td>{}</td>
+            <td>{}</td>
+            <td>{}</td>
+            <td>{}</td>
+        </tr>",
                 item.language,
                 item.code,
                 item.comment,
@@ -120,21 +106,19 @@ impl Output {
                 bytes_to_size(item.size as f64)
             );
         }
-        println!("</tbody>");
-        let total = Total::new(self.data.clone());
+        println!("    </tbody>");
+        let total = Total(self.0.clone());
         println!(
-            "
-        <tfoot>
-            <tr>
-                <td>{}</td>
-                <td>{}</td>
-                <td>{}</td>
-                <td>{}</td>
-                <td>{}</td>
-                <td>{}</td>
-            </tr>
-        </tfoot>
-        ",
+            "    <tfoot>
+        <tr>
+            <td>{}</td>
+            <td>{}</td>
+            <td>{}</td>
+            <td>{}</td>
+            <td>{}</td>
+            <td>{}</td>
+        </tr>
+    </tfoot>",
             "Total",
             total.code(),
             total.comment(),
@@ -155,7 +139,7 @@ impl Output {
             "| {:-<14} | {:-<12} | {:-<12} | {:-<12} | {:-<12} | {:-<14} |",
             "", "", "", "", "", ""
         );
-        for item in self.data.clone() {
+        for item in self.0.clone() {
             println!(
                 "| {:<14} | {:<12} | {:<12} | {:<12} | {:<12} | {:<14} |",
                 item.language,
@@ -166,7 +150,7 @@ impl Output {
                 bytes_to_size(item.size as f64)
             );
         }
-        let total = Total::new(self.data.clone());
+        let total = Total(self.0.clone());
         println!(
             "| {:<14} | {:<12} | {:<12} | {:<12} | {:<12} | {:<14} |",
             "Total",
