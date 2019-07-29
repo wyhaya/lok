@@ -1,4 +1,6 @@
 use crate::Result;
+
+#[derive(Debug)]
 pub enum OutputFormat {
     ASCII,
     HTML,

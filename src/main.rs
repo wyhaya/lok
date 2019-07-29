@@ -1,16 +1,30 @@
 use regex::Regex;
 use std::collections::HashMap;
-use std::env;
 use std::fs;
 use std::fs::DirEntry;
-use std::path::Path;
+use std::path::PathBuf;
 #[macro_use]
 extern crate lazy_static;
-#[macro_use]
-mod app;
-use app::App;
 mod output;
 use output::{Output, OutputFormat};
+
+use ace::App;
+
+macro_rules! error {
+    ($($arg:tt)*) => {
+       {
+            eprint!("\x1b[91m{}: \x1b[0m", "error");
+            eprintln!($($arg)*);
+            std::process::exit(1)
+       }
+    };
+}
+macro_rules! file_warn {
+    ($err: expr, $path: expr) => {
+        eprint!("\x1b[93m{}: \x1b[0m", "error");
+        eprintln!("{:?} {:?}", $err.kind(), $path);
+    };
+}
 
 macro_rules! regex {
     ($reg:expr) => {{
@@ -32,7 +46,7 @@ lazy_static! {
     static ref BLANK_REGEX: Regex = Regex::new(r#"^\s*$"#).unwrap();
     static ref CONFIGS: HashMap<&'static str, Config> = {
         let mut hash = HashMap::new();
-        let configs = vec![
+        let config = vec![
             (
                 "rs",
                 "Rust",
@@ -84,7 +98,7 @@ lazy_static! {
             ("toml", "TOML", None, None),
             ("lock", "Lock", None, None),
         ];
-        for c in configs {
+        for c in config {
             hash.insert(
                 c.0,
                 Config {
@@ -110,34 +124,60 @@ pub struct Result {
 }
 
 fn main() {
-    let app = App::new();
+    let app = App::new(env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"))
+        .cmd("help", "Print help information")
+        .cmd("version", "Print version information")
+        .opt("-e", "Which extension file is used (Example: js rs)")
+        .opt("-i", "Ignored file (Rust regex)")
+        .opt("-o", "Output format (Optional: ascii, html, markdown)");
 
-    if app.is_help() {
-        return app.print_help();
+    if let Some(cmd) = app.command() {
+        match cmd.as_str() {
+            "help" => {
+                app.help();
+            }
+            "version" => {
+                app.version();
+            }
+            _ => {
+                app.error_try("help");
+            }
+        }
+        return;
     }
-
-    if app.is_version() {
-        return app.print_version();
-    }
-
-    let format = match app.format() {
-        Ok(format) => format,
-        Err(_) => exit!("optional value: `ascii` `html` `markdown`"),
+    let output = app.value("-o");
+    let format = if let Some(v) = output {
+        if v.len() == 0 {
+            OutputFormat::ASCII
+        } else {
+            match v[0].as_str() {
+                "ascii" => OutputFormat::ASCII,
+                "html" => OutputFormat::HTML,
+                "markdown" => OutputFormat::MarkDown,
+                _ => error!("-o value: `ascii` `html` `markdown`"),
+            }
+        }
+    } else {
+        OutputFormat::ASCII
     };
-
-    let t = std::time::Instant::now();
 
     let mut result = vec![];
 
-    let current_dir = match env::current_dir() {
-        Ok(dir) => dir,
-        Err(err) => exit!("{:?}", err),
-    };
+    let ext = app.value("-e").unwrap_or(vec![]);
+    let ignore = app
+        .value("-i")
+        .unwrap_or(vec![])
+        .iter()
+        .map(|i| match Regex::new(i) {
+            Ok(reg) => reg,
+            Err(err) => error!("{:?}", err),
+        })
+        .collect::<Vec<Regex>>();
 
-    let tree = tree(current_dir, &app.ext(), &app.ignore());
+    let current_dir = PathBuf::from(".");
+    let data = tree(current_dir, &ext, &ignore);
 
-    for t in tree {
-        let r = parse(&t);
+    for r in data {
         let find = result
             .iter()
             .position(|item: &Result| item.language == r.language);
@@ -158,8 +198,6 @@ fn main() {
             })
         }
     }
-
-    dbg!(t.elapsed());
 
     match format {
         OutputFormat::ASCII => Output(result).ascii(),
@@ -233,10 +271,13 @@ fn parse(file: &DirEntry) -> Parse {
     }
 }
 
-fn tree<P: AsRef<Path>>(dir: P, ext: &Vec<String>, ignore: &Vec<Regex>) -> Vec<DirEntry> {
-    let read_dir = match fs::read_dir(dir) {
+fn tree(dir: PathBuf, ext: &Vec<&String>, ignore: &Vec<Regex>) -> Vec<Parse> {
+    let read_dir = match fs::read_dir(&dir) {
         Ok(dir) => dir,
-        Err(err) => exit!("{:?}", err),
+        Err(err) => {
+            file_warn!(err, &dir);
+            return vec![];
+        }
     };
 
     let mut files = vec![];
@@ -244,12 +285,18 @@ fn tree<P: AsRef<Path>>(dir: P, ext: &Vec<String>, ignore: &Vec<Regex>) -> Vec<D
     for file in read_dir {
         let file = match file {
             Ok(file) => file,
-            Err(err) => exit!("{:?}", err),
+            Err(err) => {
+                file_warn!(err, &dir);
+                continue;
+            }
         };
 
         let is_dir = match file.metadata() {
             Ok(meta) => meta.is_dir(),
-            Err(err) => exit!("{:?}", err),
+            Err(err) => {
+                file_warn!(err, &dir);
+                continue;
+            }
         };
 
         if ignore.len() != 0 {
@@ -265,9 +312,7 @@ fn tree<P: AsRef<Path>>(dir: P, ext: &Vec<String>, ignore: &Vec<Regex>) -> Vec<D
         }
 
         if is_dir {
-            for f in tree(file.path(), &ext, &ignore) {
-                files.push(f);
-            }
+            files.extend(tree(file.path(), &ext, &ignore));
         } else {
             let p = file.path();
             let e = match p.extension() {
@@ -286,7 +331,7 @@ fn tree<P: AsRef<Path>>(dir: P, ext: &Vec<String>, ignore: &Vec<Regex>) -> Vec<D
 
             let any = EXTENSIONS.iter().any(|item| item == &e);
             if any {
-                files.push(file);
+                files.push(parse(&file));
             }
         }
     }

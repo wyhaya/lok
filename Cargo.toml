@@ -1,10 +1,16 @@
 [package]
 name = "lok"
-version = "0.1.0"
+version = "0.0.1"
 authors = ["wyhaya <wyhaya@gmail.com>"]
 edition = "2018"
+description = "Calculation code information"
+license = "MIT"
+license-file = "LICENSE"
+homepage = "https://github.com/wyhaya/lok"
+repository = "https://github.com/wyhaya/lok.git"
 
 
 [dependencies]
+ace = "0.0.2"
 regex = "1.1.7"
 lazy_static = "1.3.0"
