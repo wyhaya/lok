@@ -1,7 +1,7 @@
 use crate::Result;
 
 #[derive(Debug)]
-pub enum OutputFormat {
+pub enum Output {
     ASCII,
     HTML,
     MarkDown,
@@ -11,7 +11,7 @@ macro_rules! total {
     ($name: ident, $type: path) => {
         fn $name(&self) -> $type {
             let mut n = 0;
-            for item in &self.0 {
+            for item in self.0 {
                 n += item.$name
             }
             n
@@ -19,9 +19,9 @@ macro_rules! total {
     };
 }
 
-struct Total(Vec<Result>);
+struct Total<'a>(&'a Vec<Result>);
 
-impl Total {
+impl<'a> Total<'a> {
     total!(code, i32);
     total!(comment, i32);
     total!(blank, i32);
@@ -39,9 +39,9 @@ fn bytes_to_size(bytes: f64) -> String {
     format!("{:.2} {}", bytes / k.powi(i), sizes[i as usize])
 }
 
-pub struct Output(pub Vec<Result>);
+pub struct Print(pub Vec<Result>);
 
-impl Output {
+impl Print {
     pub fn ascii(&self) {
         println!("┌{:─<78}┐", "");
         println!(
@@ -49,7 +49,8 @@ impl Output {
             "Language", "Code", "Comment", "Blank", "File", "Size"
         );
         println!("├{:─<78}┤", "");
-        for item in self.0.clone() {
+
+        for item in &self.0 {
             println!(
                 "| {:<14}{:>12}{:>12}{:>12}{:>12}{:>14} |",
                 item.language,
@@ -61,7 +62,7 @@ impl Output {
             );
         }
         println!("├{:─<78}┤", "");
-        let total = Total(self.0.clone());
+        let total = Total(&self.0);
         println!(
             "| {:<14}{:>12}{:>12}{:>12}{:>12}{:>14} |",
             "Total",
@@ -90,7 +91,7 @@ impl Output {
         );
 
         println!("    <tbody>");
-        for item in self.0.clone() {
+        for item in &self.0 {
             println!(
                 "        <tr>
             <td>{}</td>
@@ -109,7 +110,7 @@ impl Output {
             );
         }
         println!("    </tbody>");
-        let total = Total(self.0.clone());
+        let total = Total(&self.0);
         println!(
             "    <tfoot>
         <tr>
@@ -141,7 +142,7 @@ impl Output {
             "| {:-<14} | {:-<12} | {:-<12} | {:-<12} | {:-<12} | {:-<14} |",
             "", "", "", "", "", ""
         );
-        for item in self.0.clone() {
+        for item in &self.0 {
             println!(
                 "| {:<14} | {:<12} | {:<12} | {:<12} | {:<12} | {:<14} |",
                 item.language,
@@ -152,7 +153,7 @@ impl Output {
                 bytes_to_size(item.size as f64)
             );
         }
-        let total = Total(self.0.clone());
+        let total = Total(&self.0);
         println!(
             "| {:<14} | {:<12} | {:<12} | {:<12} | {:<12} | {:<14} |",
             "Total",
