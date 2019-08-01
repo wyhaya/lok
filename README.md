@@ -7,8 +7,22 @@
 
 `lok` is a command line tool, that is used to quickly calculate the number of lines of various language codes in a project
 
-![preview](https://user-images.githubusercontent.com/23690145/51882818-3c5b8c80-23bb-11e9-8da6-5e7b19a7f536.png)
-
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+| Language              Code     Comment       Blank        File          Size |
+├──────────────────────────────────────────────────────────────────────────────┤
+| HTML                   360           0          27          13      24.97 KB |
+| JavaScript             238         240          79          22     935.95 KB |
+| JavaScript JSX       26570        2011        4096         299     766.10 KB |
+| JSON                    81           0           3           4       1.97 KB |
+| MarkDown                31           0          13           1      882.00 B |
+| TypeScript              57           6          12           3       3.78 KB |
+| TypeScript JSX         691          78          46          10      19.12 KB |
+| YML                      4           0           0           1       58.00 B |
+├──────────────────────────────────────────────────────────────────────────────┤
+| Total                28032        2335        4276         353       1.71 MB |
+└──────────────────────────────────────────────────────────────────────────────┘
+```
 
 ## Features
 

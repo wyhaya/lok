@@ -124,7 +124,10 @@ fn main() {
         .opt("-i", "Ignored file (rust regex)")
         .opt("-o", "Output format (optional: ascii, html, markdown)")
         .opt("-p", "Set working directory")
-        .opt("-s", "Sort by (optional: code, comment, blank, file, size)");
+        .opt(
+            "-s",
+            "Sort by (optional: language, code, comment, blank, file, size)",
+        );
 
     if let Some(cmd) = app.command() {
         match cmd.as_str() {
@@ -195,7 +198,7 @@ fn main() {
                     "blank" => Sort::Blank,
                     "file" => Sort::File,
                     "size" => Sort::Size,
-                    _ => exit!("-s value: `code` `comment` `blank` `file` `size`"),
+                    _ => exit!("-s value: `language`, `code` `comment` `blank` `file` `size`"),
                 }
             }
         }
@@ -245,11 +248,43 @@ fn main() {
         }
     }
 
-    match o {
-        Output::ASCII => Print(result).ascii(),
-        Output::HTML => Print(result).html(),
-        Output::MarkDown => Print(result).markdown(),
+    let data = match s {
+        Sort::Code => sort(result, |a, b| a.code > b.code),
+        Sort::Comment => sort(result, |a, b| a.comment > b.comment),
+        Sort::Blank => sort(result, |a, b| a.blank > b.blank),
+        Sort::File => sort(result, |a, b| a.file > b.file),
+        Sort::Size => sort(result, |a, b| a.size > b.size),
+        _ => sort(result, |a, b| position(a.language) > position(b.language)),
     };
+
+    match o {
+        Output::ASCII => Print(data).ascii(),
+        Output::HTML => Print(data).html(),
+        Output::MarkDown => Print(data).markdown(),
+    };
+}
+
+fn sort<T>(mut vec: Vec<T>, call: fn(&T, &T) -> bool) -> Vec<T> {
+    for x in 0..vec.len() {
+        for y in x..vec.len() {
+            if call(&vec[x], &vec[y]) {
+                vec.swap(x, y);
+            }
+        }
+    }
+    vec
+}
+
+const LETTER: &'static str = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ";
+fn position(s: &str) -> usize {
+    if let Some(c) = s.chars().next() {
+        let index = LETTER.chars().position(|d| d == c);
+        return match index {
+            Some(i) => i,
+            None => 0,
+        };
+    }
+    0
 }
 
 fn tree(dir: PathBuf, work: &deque::Worker<Work>, ext: &Vec<&String>, ignore: &Option<Regex>) {
