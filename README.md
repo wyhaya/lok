@@ -83,7 +83,7 @@ lok -s code
 
 ## Contributing
 
-If you want to add statistics for other languages, please update [./src/main.rs](./src/main.rs)
+If you want to add statistics for other languages, please update [config.rs](./src/config.rs)
 
 Example:
 

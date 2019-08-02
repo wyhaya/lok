@@ -5,7 +5,6 @@ authors = ["wyhaya <wyhaya@gmail.com>"]
 edition = "2018"
 description = "Calculation code information"
 license = "MIT"
-license-file = "LICENSE"
 homepage = "https://github.com/wyhaya/lok"
 repository = "https://github.com/wyhaya/lok.git"
 
