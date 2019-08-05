@@ -1,6 +1,3 @@
-#[macro_use]
-extern crate lazy_static;
-
 mod config;
 mod output;
 
@@ -31,14 +28,18 @@ macro_rules! warn {
     };
 }
 
-lazy_static! {
-    static ref BLANK_REGEX: Regex = Regex::new(r#"^\s*$"#).unwrap();
-    static ref CONFIGS: Config = config::new();
-}
+static mut BLANK_REGEX: Option<Regex> = None;
+static mut CONFIG: Option<Config> = None;
 
 fn main() {
+    unsafe {
+        BLANK_REGEX = Some(Regex::new(r#"^\s*$"#).unwrap());
+        CONFIG = Some(config::new());
+    }
+
     let app = App::new(env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"))
         .cmd("help", "Print help information")
+        .cmd("list", "Print a list of supported languages")
         .cmd("version", "Print version information")
         .opt("-e", "Which extension file is used (example: js rs)")
         .opt("-i", "Ignored file (rust regex)")
@@ -53,6 +54,9 @@ fn main() {
         match cmd.as_str() {
             "help" => {
                 app.help();
+            }
+            "list" => {
+                print_support_list();
             }
             "version" => {
                 app.version();
@@ -135,7 +139,7 @@ fn main() {
         workers.push(thread::spawn(|| worker.run()));
     }
 
-    tree(p,&e, &i, &work);
+    tree(p, &e, &i, &work);
 
     for _ in 0..workers.len() {
         work.push(Work::Quit);
@@ -182,6 +186,27 @@ fn main() {
         Output::HTML => Print(data).html(),
         Output::MarkDown => Print(data).markdown(),
     };
+}
+
+fn print_support_list() {
+    let config = unsafe { CONFIG.as_ref() }.unwrap();
+
+    let mut max = 0;
+    for item in &config.data {
+        if item.name.len() > max {
+            max = item.name.len();
+        }
+    }
+
+    for item in &config.data {
+        let ext = item
+            .extension
+            .iter()
+            .map(|e| format!(".{}", e))
+            .collect::<Vec<String>>()
+            .join(" ");
+        println!("{:name$}    {}", item.name, ext, name = max);
+    }
 }
 
 fn sort<T>(mut vec: Vec<T>, call: fn(&T, &T) -> bool) -> Vec<T> {
@@ -264,7 +289,7 @@ fn tree(dir: PathBuf, ext: &Vec<&String>, ignore: &Option<Regex>, work: &deque::
             }
         }
 
-        if let Some(config) = CONFIGS.get(extension) {
+        if let Some(config) = unsafe { CONFIG.as_ref() }.unwrap().get(extension) {
             work.push(Work::File(path, meta.len(), config));
         }
     }
@@ -346,7 +371,7 @@ impl Parse {
         let mut is_comment = false;
 
         for line in content.split("\n") {
-            if BLANK_REGEX.is_match(&line) {
+            if unsafe { BLANK_REGEX.as_ref() }.unwrap().is_match(&line) {
                 blank += 1;
                 continue;
             }

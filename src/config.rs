@@ -50,7 +50,7 @@ pub fn new() -> Config {
     language!("Java", vec!["java"], None, None);
     language!("LLVM", vec!["ll"], None, None);
     language!("Lua", vec!["lua"], None, None);
-    language!("MarkDown", vec!["md", " markdown"], None, None);
+    language!("MarkDown", vec!["md", "markdown"], None, None);
     language!("Nim", vec!["nim"], None, None);
     language!("ObjectiveC", vec!["m"], None, None);
     language!("ObjectiveCpp", vec!["mm"], None, None);
@@ -97,12 +97,12 @@ pub fn new() -> Config {
 
 #[derive(Debug, Default)]
 pub struct Config {
-    data: Vec<Language>,
+    pub data: Vec<Language>,
 }
 
 #[derive(Debug)]
 pub struct Language {
-    extension: Vec<&'static str>,
+    pub extension: Vec<&'static str>,
     pub name: &'static str,
     pub single: Option<Regex>,
     pub multi: Option<(Regex, Regex)>,
