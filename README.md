@@ -89,8 +89,8 @@ Example:
 
 ```rust
 language!(
-    "js",
     "JavaScript",
+    vec!["js"],
     regex!(r#"^\s*//"#),
     regex!(r#"/\*"#, r#"\*/"#)
 );

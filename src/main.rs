@@ -5,11 +5,10 @@ mod config;
 mod output;
 
 use ace::App;
-use config::Config;
+use config::{Config, Language};
 use deque::{Stealer, Stolen};
 use output::{Output, Print};
 use regex::Regex;
-use std::collections::HashMap;
 use std::fs;
 use std::io::ErrorKind;
 use std::path::PathBuf;
@@ -33,8 +32,8 @@ macro_rules! warn {
 }
 
 lazy_static! {
-    static ref BLANK_REGEX: Regex = config::blank();
-    static ref CONFIGS: HashMap<&'static str, Config> = config::new();
+    static ref BLANK_REGEX: Regex = Regex::new(r#"^\s*$"#).unwrap();
+    static ref CONFIGS: Config = config::new();
 }
 
 fn main() {
@@ -136,7 +135,7 @@ fn main() {
         workers.push(thread::spawn(|| worker.run()));
     }
 
-    tree(p, &work, &e, &i);
+    tree(p,&e, &i, &work);
 
     for _ in 0..workers.len() {
         work.push(Work::Quit);
@@ -208,7 +207,7 @@ fn position(s: &str) -> usize {
     0
 }
 
-fn tree(dir: PathBuf, work: &deque::Worker<Work>, ext: &Vec<&String>, ignore: &Option<Regex>) {
+fn tree(dir: PathBuf, ext: &Vec<&String>, ignore: &Option<Regex>, work: &deque::Worker<Work>) {
     let read_dir = match fs::read_dir(&dir) {
         Ok(dir) => dir,
         Err(err) => {
@@ -247,7 +246,7 @@ fn tree(dir: PathBuf, work: &deque::Worker<Work>, ext: &Vec<&String>, ignore: &O
         let path = file.path();
 
         if meta.is_dir() {
-            tree(path, &work, &ext, &ignore);
+            tree(path, &ext, &ignore, &work);
             continue;
         }
 
@@ -292,7 +291,7 @@ enum Sort {
 }
 
 enum Work<'a> {
-    File(PathBuf, u64, &'a Config),
+    File(PathBuf, u64, &'a Language),
     Quit,
 }
 
@@ -334,7 +333,7 @@ impl Parse {
     fn new(
         path: PathBuf,
         size: u64,
-        config: &Config,
+        config: &Language,
     ) -> std::result::Result<Parse, (ErrorKind, PathBuf)> {
         let content = match fs::read_to_string(&path) {
             Ok(data) => data,
@@ -378,7 +377,7 @@ impl Parse {
         }
 
         Ok(Parse {
-            language: config.language,
+            language: config.name,
             blank,
             comment,
             code,

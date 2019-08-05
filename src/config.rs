@@ -1,4 +1,3 @@
-use crate::HashMap;
 use crate::Regex;
 
 macro_rules! regex {
@@ -10,81 +9,114 @@ macro_rules! regex {
     }};
 }
 
-#[derive(Debug)]
-pub struct Config {
-    pub language: &'static str,
-    pub single: Option<Regex>,
-    pub multi: Option<(Regex, Regex)>,
-}
-
-pub fn new() -> HashMap<&'static str, Config> {
-    let mut config = HashMap::new();
+pub fn new() -> Config {
+    let mut config = Config::default();
 
     macro_rules! language {
-        ($ext: expr, $language: expr, $single: expr, $multi: expr) => {
-            config.insert(
-                $ext,
-                Config {
-                    language: $language,
-                    single: $single,
-                    multi: $multi,
-                },
-            );
-        };
+        ($name: expr, $ext: expr, $single: expr, $multi: expr) => {{
+            config.data.push(Language {
+                name: $name,
+                extension: $ext,
+                single: $single,
+                multi: $multi,
+            });
+        }};
     }
 
+    language!("AspNet", vec!["aspx"], None, None);
+    language!("C", vec!["c"], None, None);
+    language!("CSS", vec!["css", "scss", "sass", "less"], None, None);
+    language!("Cpp", vec!["cpp"], None, None);
+    language!("CoffeeScript", vec!["coffee"], None, None);
+    language!("D", vec!["d"], None, None);
+    language!("Dart", vec!["dart"], None, None);
+    language!("Go", vec!["go"], None, None);
     language!(
-        "rs",
-        "Rust",
-        regex!(r#"^\s*//"#),
-        regex!(r#"/\*"#, r#"\*/"#)
+        "HTML",
+        vec!["htm", "html"],
+        None,
+        regex!(r#"<!--"#, r#"-->"#)
     );
+    language!("Haskell", vec!["hs"], None, None);
     language!(
-        "js",
         "JavaScript",
+        vec!["js", "mjs"],
         regex!(r#"^\s*//"#),
         regex!(r#"/\*"#, r#"\*/"#)
     );
+    language!("JavaScript JSX", vec!["jsx"], None, None);
+    language!("JSON", vec!["json"], None, None);
+    language!("Julia", vec!["jl"], None, None);
+    language!("Java", vec!["java"], None, None);
+    language!("LLVM", vec!["ll"], None, None);
+    language!("Lua", vec!["lua"], None, None);
+    language!("MarkDown", vec!["md", " markdown"], None, None);
+    language!("Nim", vec!["nim"], None, None);
+    language!("ObjectiveC", vec!["m"], None, None);
+    language!("ObjectiveCpp", vec!["mm"], None, None);
     language!(
-        "ts",
-        "TypeScript",
+        "PHP",
+        vec!["php"],
         regex!(r#"^\s*//"#),
         regex!(r#"/\*"#, r#"\*/"#)
     );
-    language!("css", "CSS", None, None);
-    language!("scss", "CSS", None, None);
-    language!("sass", "CSS", None, None);
-    language!("less", "CSS", None, None);
-    language!("html", "HTML", None, None);
-    language!("jsx", "JavaScript JSX", None, None);
-    language!("tsx", "TypeScript JSX", None, None);
-    language!("json", "JSON", None, None);
-    language!("md", "MarkDown", None, None);
-    language!("php", "PHP", None, None);
-    language!("rs", "Rust", None, None);
-    language!("go", "Go", None, None);
-    language!("py", "Python", None, None);
-    language!("sh", "Shell", None, None);
-    language!("yml", "YML", None, None);
-    language!("swift", "Swift", None, None);
-    language!("c", "C", None, None);
-    language!("coffee", "CoffeeScript", None, None);
-    language!("dart", "Dart", None, None);
-    language!("java", "Java", None, None);
-    language!("lua", "Lua", None, None);
-    language!("m", "ObjectiveC", None, None);
-    language!("aspx", "AspNet", None, None);
-    language!("sc", "Scala", None, None);
-    language!("sql", "Sql", None, None);
-    language!("styl", "Stylus", None, None);
-    language!("vim", "VimScript", None, None);
-    language!("xml", "XML", None, None);
-    language!("toml", "TOML", None, None);
-    language!("vue", "Vue", None, None);
+    language!("Python", vec!["py"], regex!(r#"#"#), None);
+    language!("Perl", vec!["pl", "pm"], None, None);
+    language!(
+        "Rust",
+        vec!["rs"],
+        regex!(r#"^\s*//"#),
+        regex!(r#"/\*"#, r#"\*/"#)
+    );
+    language!("Ruby", vec!["rb"], None, None);
+    language!("Swift", vec!["swift"], None, None);
+    language!("Scala", vec!["sc"], None, None);
+    language!(
+        "Shell",
+        vec!["sh", "bash", "zsh", "fish"],
+        regex!(r#"#"#),
+        None
+    );
+    language!("SQL", vec!["sql"], None, None);
+    language!("SVG", vec!["svg"], None, None);
+    language!(
+        "TypeScript",
+        vec!["ts"],
+        regex!(r#"^\s*//"#),
+        regex!(r#"/\*"#, r#"\*/"#)
+    );
+    language!("TypeScript JSX", vec!["tsx"], None, None);
+    language!("TOML", vec!["toml"], None, None);
+    language!("Vue", vec!["vue"], None, None);
+    language!("VimScript", vec!["vim"], None, None);
+    language!("XML", vec!["xml"], None, None);
+    language!("YAML", vec!["yml", "yaml"], regex!(r#"#"#), None);
 
     config
 }
 
-pub fn blank() -> Regex {
-    Regex::new(r#"^\s*$"#).unwrap()
+#[derive(Debug, Default)]
+pub struct Config {
+    data: Vec<Language>,
+}
+
+#[derive(Debug)]
+pub struct Language {
+    extension: Vec<&'static str>,
+    pub name: &'static str,
+    pub single: Option<Regex>,
+    pub multi: Option<(Regex, Regex)>,
+}
+
+impl Config {
+    pub fn get(&self, extension: &str) -> Option<&Language> {
+        for item in &self.data {
+            for ext in &item.extension {
+                if *ext == extension {
+                    return Some(&item);
+                }
+            }
+        }
+        None
+    }
 }
