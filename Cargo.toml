@@ -1,13 +1,21 @@
 [package]
 name = "lok"
 version = "0.0.1"
-authors = ["wyhaya <wyhaya@gmail.com>"]
 edition = "2018"
+
+authors = ["wyhaya <wyhaya@gmail.com>"]
 description = "Calculation code information"
-license = "MIT"
 homepage = "https://github.com/wyhaya/lok"
 repository = "https://github.com/wyhaya/lok.git"
+license = "MIT"
+readme = "README.md"
 
+keywords = [
+    "codes",
+    "count",
+    "count-lines-of-code",
+    "command-line-tool"
+]
 
 [dependencies]
 ace = "0.0.2"
