@@ -51,7 +51,7 @@ pub fn new() -> Config {
     language!("Java", vec!["java"], None, None);
     language!("LLVM", vec!["ll"], None, None);
     language!("Lua", vec!["lua"], None, None);
-    language!("MarkDown", vec!["md", "markdown"], None, None);
+    language!("Markdown", vec!["md", "markdown"], None, None);
     language!("Nim", vec!["nim"], None, None);
     language!("ObjectiveC", vec!["m"], None, None);
     language!("ObjectiveCpp", vec!["mm"], None, None);
