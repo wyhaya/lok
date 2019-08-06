@@ -9,6 +9,7 @@ macro_rules! regex {
     }};
 }
 
+// todo
 pub fn new() -> Config {
     let mut config = Config::default();
 

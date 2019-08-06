@@ -3,7 +3,7 @@ mod output;
 
 use ace::App;
 use config::{Config, Language};
-use deque::{Stealer, Stolen};
+use crossbeam_deque::{Stealer, Worker};
 use output::{Output, Print};
 use regex::Regex;
 use std::fs;
@@ -41,7 +41,7 @@ fn main() {
         .cmd("help", "Print help information")
         .cmd("list", "Print a list of supported languages")
         .cmd("version", "Print version information")
-        .opt("-e", "Which extension file is used (example: js rs)")
+        .opt("-e", "Parse the specified extension (example: js rs)")
         .opt("-i", "Ignored file (rust regex)")
         .opt("-o", "Output format (optional: ascii, html, markdown)")
         .opt("-p", "Set working directory")
@@ -129,26 +129,26 @@ fn main() {
         None => Sort::Language,
     };
 
-    let (work, stealer) = deque::new();
-    let mut workers = vec![];
+    let work = Worker::new_fifo();
+    let stealer = work.stealer();
+    let mut threads = vec![];
 
     for _ in 0..num_cpus::get() {
-        let worker = Worker {
-            data: stealer.clone(),
-        };
-        workers.push(thread::spawn(|| worker.run()));
+        let fifo = Queue(stealer.clone());
+        threads.push(thread::spawn(|| fifo.run()));
     }
 
+    // todo
     tree(p, &e, &i, &work);
 
-    for _ in 0..workers.len() {
+    for _ in 0..threads.len() {
         work.push(Work::Quit);
     }
 
     let mut result = vec![];
 
-    for worker in workers {
-        for d in worker.join().unwrap() {
+    for t in threads {
+        for d in t.join().unwrap() {
             let find = result
                 .iter()
                 .position(|item: &Result| item.language == d.language);
@@ -220,7 +220,7 @@ fn sort<T>(mut vec: Vec<T>, call: fn(&T, &T) -> bool) -> Vec<T> {
     vec
 }
 
-const LETTER: &'static str = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ";
+const LETTER: &'static str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 fn position(s: &str) -> usize {
     if let Some(c) = s.chars().next() {
         let index = LETTER.chars().position(|d| d == c);
@@ -232,7 +232,7 @@ fn position(s: &str) -> usize {
     0
 }
 
-fn tree(dir: PathBuf, ext: &Vec<&String>, ignore: &Option<Regex>, work: &deque::Worker<Work>) {
+fn tree(dir: PathBuf, ext: &Vec<&String>, ignore: &Option<Regex>, work: &Worker<Work>) {
     let read_dir = match fs::read_dir(&dir) {
         Ok(dir) => dir,
         Err(err) => {
@@ -320,24 +320,29 @@ enum Work<'a> {
     Quit,
 }
 
-struct Worker<'a> {
-    data: Stealer<Work<'a>>,
-}
+struct Queue<'a>(Stealer<Work<'a>>);
 
-impl<'a> Worker<'a> {
+impl<'a> Queue<'a> {
     fn run(self) -> Vec<Parse> {
         let mut vec = vec![];
         loop {
-            match self.data.steal() {
-                Stolen::Empty | Stolen::Abort => continue,
-                Stolen::Data(Work::Quit) => break,
-                Stolen::Data(Work::File(path, size, config)) => {
+            let work = match self.0.steal().success() {
+                Some(work) => work,
+                None => {
+                    continue;
+                }
+            };
+            match work {
+                Work::File(path, size, config) => {
                     match Parse::new(path, size, &config) {
                         Ok(d) => vec.push(d),
                         Err((kind, p)) => {
                             warn!(kind, p);
                         }
                     };
+                }
+                Work::Quit => {
+                    break;
                 }
             }
         }
@@ -354,6 +359,7 @@ struct Parse {
     size: u64,
 }
 
+// todo
 impl Parse {
     fn new(
         path: PathBuf,

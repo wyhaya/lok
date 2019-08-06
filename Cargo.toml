@@ -11,6 +11,6 @@ repository = "https://github.com/wyhaya/lok.git"
 
 [dependencies]
 ace = "0.0.2"
-deque = "0.3.2"
+crossbeam-deque = "0.7.1"
 num_cpus = "1.10.1"
 regex = "1.1.7"
