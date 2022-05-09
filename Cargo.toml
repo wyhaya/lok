@@ -1,0 +1,29 @@
+[package]
+name = "lok"
+version = "0.2.1"
+edition = "2021"
+authors = ["wyhaya <wyhaya@gmail.com>"]
+description = "Count the number of codes"
+homepage = "https://github.com/wyhaya/lok"
+repository = "https://github.com/wyhaya/lok.git"
+license = "MIT"
+readme = "README.md"
+
+keywords = [
+    "codes",
+    "count",
+    "count-lines-of-code",
+    "command-line-tool"
+]
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = "symbols"
+
+[dependencies]
+bright = "0.4.1"
+clap = "2.34.0"
+crossbeam-deque = "0.8.1"
+glob = "0.3.0"
+walkdir = "2.3.2"
