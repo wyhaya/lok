@@ -41,6 +41,13 @@ Or use `cargo` to install
 cargo install lok
 ```
 
+A native package is available on NetBSD from the official repositories.
+To install it, simply run
+
+```bash
+pkgin install lok
+```
+
 ## Use
 
 Go to your project in the terminal and type `lok` on the command line
