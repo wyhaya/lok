@@ -4,7 +4,7 @@ pub struct Config(&'static [Language]);
 #[derive(Debug)]
 pub struct Language {
     pub name: &'static str,
-    pub extension: &'static [&'static str],
+    pub extensions: &'static [&'static str],
     pub single: &'static [&'static str],
     pub multi: &'static [(&'static str, &'static str)],
 }
@@ -13,7 +13,7 @@ macro_rules! language {
     ($name: expr, $ext: expr, $single: expr, $multi: expr) => {
         Language {
             name: $name,
-            extension: $ext,
+            extensions: $ext,
             single: $single,
             multi: $multi,
         }
@@ -28,10 +28,8 @@ impl Config {
     // Get language configuration by extension
     pub fn get(&self, extension: &str) -> Option<&Language> {
         for item in self.0 {
-            for ext in item.extension {
-                if *ext == extension {
-                    return Some(item);
-                }
+            if item.extensions.contains(&extension) {
+                return Some(item);
             }
         }
         None

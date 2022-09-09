@@ -1,6 +1,6 @@
 [package]
 name = "lok"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2021"
 authors = ["wyhaya <wyhaya@gmail.com>"]
 description = "Count the number of codes"
@@ -24,6 +24,6 @@ strip = "symbols"
 [dependencies]
 bright = "0.4.1"
 clap = "2.34.0"
-crossbeam-deque = "0.8.1"
+crossbeam-deque = "0.8.2"
 glob = "0.3.0"
 walkdir = "2.3.2"

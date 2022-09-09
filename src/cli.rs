@@ -4,6 +4,7 @@ use crate::CONFIG;
 use clap::{crate_name, crate_version, value_t_or_exit, App, AppSettings, Arg, SubCommand};
 use glob::Pattern;
 use std::path::PathBuf;
+use std::str::FromStr;
 
 pub struct Args {
     pub work_dir: PathBuf,
@@ -25,7 +26,7 @@ pub enum Sort {
     Size,
 }
 
-impl std::str::FromStr for Sort {
+impl FromStr for Sort {
     type Err = ();
     fn from_str(value: &str) -> Result<Self, Self::Err> {
         match value {
@@ -147,7 +148,7 @@ fn print_language_list() {
 
     for language in CONFIG.languages() {
         let ext = language
-            .extension
+            .extensions
             .iter()
             .map(|e| format!(".{}", e))
             .collect::<Vec<String>>()

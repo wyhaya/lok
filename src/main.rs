@@ -3,15 +3,14 @@ mod config;
 mod output;
 mod parse;
 mod util;
+mod workder;
 
 use cli::{Args, Sort};
-use config::{Language, CONFIG};
-use crossbeam_deque::{Stealer, Worker};
+use config::CONFIG;
 use output::Output;
 use parse::{parser, Data, Value};
-use std::path::PathBuf;
-use util::num_cpus;
 use walkdir::WalkDir;
+use workder::Tasks;
 
 fn main() {
     let Args {
@@ -23,22 +22,6 @@ fn main() {
         sort,
         extension,
     } = cli::parse();
-
-    let worker = Worker::new_fifo();
-    let cpus = num_cpus();
-    let mut threads = Vec::with_capacity(cpus);
-
-    // Created thread
-    for _ in 0..cpus {
-        let stealer = worker.stealer().clone();
-        threads.push(std::thread::spawn(move || {
-            let task = Task {
-                stealer,
-                print_error,
-            };
-            task.start()
-        }));
-    }
 
     let files = WalkDir::new(work_dir).into_iter().filter_map(|item| {
         let entry = match item {
@@ -94,23 +77,30 @@ fn main() {
             .map(|config| (entry.path().to_path_buf(), config))
     });
 
-    for (path, config) in files {
-        worker.push(Work::Parse(path, config));
-    }
+    let tasks = Tasks::new();
 
-    for _ in 0..cpus {
-        worker.push(Work::Quit);
+    for (path, config) in files {
+        tasks.push(move || {
+            match parser(path, config) {
+                Value::Ok(data) => return Some(data),
+                Value::Err(kind, p) => {
+                    if print_error {
+                        print_error!(kind, p)
+                    }
+                }
+                Value::Invalid => {}
+            };
+            None
+        });
     }
 
     // Summary of all data
     let mut total = Vec::new();
-
-    for thread in threads {
-        let task_data = thread.join().unwrap_or_else(|err| {
+    for rst in tasks.result() {
+        let datas = rst.unwrap_or_else(|err| {
             exit!("Thread exits abnormally\n{:#?}", err);
         });
-
-        for data in task_data {
+        for data in datas {
             let find = total
                 .iter_mut()
                 .find(|item: &&mut Detail| item.language == data.language);
@@ -164,46 +154,5 @@ impl Detail {
         self.code += data.code;
         self.size += data.size;
         self.file += 1;
-    }
-}
-
-enum Work<'a> {
-    Parse(PathBuf, &'a Language),
-    Quit,
-}
-
-struct Task<'a> {
-    stealer: Stealer<Work<'a>>,
-    print_error: bool,
-}
-
-impl<'a> Task<'a> {
-    fn start(self) -> Vec<Data> {
-        let mut result = Vec::new();
-
-        loop {
-            // Receive message
-            let work = match self.stealer.steal().success() {
-                Some(work) => work,
-                None => continue,
-            };
-
-            match work {
-                Work::Parse(path, config) => {
-                    match parser(path, config) {
-                        Value::Ok(data) => result.push(data),
-                        Value::Err(kind, p) => {
-                            if self.print_error {
-                                print_error!(kind, p)
-                            }
-                        }
-                        Value::Invalid => continue,
-                    };
-                }
-                Work::Quit => break,
-            }
-        }
-
-        result
     }
 }
