@@ -27,12 +27,9 @@ impl Config {
 
     // Get language configuration by extension
     pub fn get(&self, extension: &str) -> Option<&Language> {
-        for item in self.0 {
-            if item.extensions.contains(&extension) {
-                return Some(item);
-            }
-        }
-        None
+        self.0
+            .iter()
+            .find(|&item| item.extensions.contains(&extension))
     }
 }
 
