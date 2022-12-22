@@ -2,7 +2,7 @@
 
 # lok
 
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/wyhaya/lok/Build?style=flat-square)](https://github.com/wyhaya/lok/actions)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/wyhaya/lok/ci.yml?style=flat-square&branch=main)](https://github.com/wyhaya/lok/actions)
 [![Crates.io](https://img.shields.io/crates/v/lok.svg?style=flat-square)](https://crates.io/crates/lok)
 [![LICENSE](https://img.shields.io/crates/l/lok.svg?style=flat-square)](https://github.com/wyhaya/lok/blob/master/LICENSE)
 
