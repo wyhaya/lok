@@ -64,7 +64,7 @@ pub const CONFIG: Config = Config(&[
         "Common Lisp",
         &["lisp", "lsp", "l", "cl", "fasl"],
         &[";", ";;", ";;;", ";;;;"],
-        &["#|", "|#"]
+        &[("#|", "|#")]
     ),
     language!("LLVM", &["ll"], &[","], &[]),
     language!("Lua", &["lua"], &["--"], &[("--[[", "]]")]),
