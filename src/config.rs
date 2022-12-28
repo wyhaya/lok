@@ -60,6 +60,12 @@ pub const CONFIG: Config = Config(&[
     language!("JSON", &["json"], &[], &[]),
     language!("Julia", &["jl"], &["#"], &[("#=", "=#")]),
     language!("Java", &["java"], &["//"], &[("/*", "*/")]),
+    language!(
+        "Common Lisp",
+        &["lisp", "lsp", "l", "cl", "fasl"],
+        &[";", ";;", ";;;", ";;;;"],
+        &[("#|", "|#")]
+    ),
     language!("LLVM", &["ll"], &[","], &[]),
     language!("Lua", &["lua"], &["--"], &[("--[[", "]]")]),
     language!("Markdown", &["md", "markdown"], &[], &[]),
@@ -79,6 +85,12 @@ pub const CONFIG: Config = Config(&[
     language!("Ruby", &["rb"], &["#"], &[("=", "=")]),
     language!("Swift", &["swift"], &["//"], &[("/*", "*/")]),
     language!("Scala", &["sc"], &["//"], &[("/*", "*/")]),
+    language!(
+        "Scheme",
+        &["scm", "ss"],
+        &[";", ";;", ";;;", ";;;;", "#;"],
+        &[("#|", "|#")]
+    ),
     language!("Shell", &["sh", "bash", "zsh", "fish"], &["#"], &[]),
     language!("SQL", &["sql"], &["--"], &[("/*", "*/")]),
     language!("TypeScript", &["ts"], &["//"], &[("/*", "*/")]),
