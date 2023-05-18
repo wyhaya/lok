@@ -48,6 +48,12 @@ To install it, simply run
 pkgin install lok
 ```
 
+A package on the AUR is also available. To install it simply run with your favorite AUR helper
+
+```bash
+paru lok
+```
+
 ## Use
 
 Go to your project in the terminal and type `lok` on the command line
