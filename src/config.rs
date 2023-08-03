@@ -102,4 +102,5 @@ pub const CONFIG: Config = Config(&[
     language!("VimScript", &["vim"], &[], &[]),
     language!("XML", &["xml"], &[], &[("<!--", "-->")]),
     language!("YAML", &["yml", "yaml"], &["#"], &[]),
+    language!("Kotlin", &["kt"], &["//"], &[("/*", "*/")]),
 ]);
