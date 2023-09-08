@@ -49,9 +49,24 @@ pub const CONFIG: Config = Config(&[
     ),
     language!("C++", &["cpp"], &["//"], &[("/*", "*/")]),
     language!("Clojure", &["clj"], &[";", ";;", ";;;", ";;;;", "#_"], &[]),
-    language!("ClojureC", &["cljc"], &[";", ";;", ";;;", ";;;;", "#_"], &[]),
-    language!("ClojureDart", &["cljd"], &[";", ";;", ";;;", ";;;;", "#_"], &[]),
-    language!("ClojureScript", &["cljs"], &[";", ";;", ";;;", ";;;;", "#_"], &[]),
+    language!(
+        "ClojureC",
+        &["cljc"],
+        &[";", ";;", ";;;", ";;;;", "#_"],
+        &[]
+    ),
+    language!(
+        "ClojureDart",
+        &["cljd"],
+        &[";", ";;", ";;;", ";;;;", "#_"],
+        &[]
+    ),
+    language!(
+        "ClojureScript",
+        &["cljs"],
+        &[";", ";;", ";;;", ";;;;", "#_"],
+        &[]
+    ),
     language!("CoffeeScript", &["coffee"], &["#"], &[("###", "###")]),
     language!("C#", &["cs"], &["//", "///"], &[("/*", "*/")]),
     language!("D", &["d"], &["//", "///"], &[("/*", "*/")]),
