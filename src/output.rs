@@ -7,6 +7,7 @@ pub enum Format {
     Table,
     Html,
     Markdown,
+    Json,
 }
 
 impl FromStr for Format {
@@ -16,6 +17,7 @@ impl FromStr for Format {
             "table" => Ok(Format::Table),
             "html" => Ok(Format::Html),
             "markdown" => Ok(Format::Markdown),
+            "json" => Ok(Format::Json),
             _ => Err(()),
         }
     }
@@ -64,6 +66,7 @@ impl Output {
             Format::Table => self.table(&mut data),
             Format::Html => self.html(&mut data),
             Format::Markdown => self.markdown(&mut data),
+            Format::Json => self.json(&mut data),
         };
 
         println!("{}", data.join("\n"));
@@ -189,6 +192,46 @@ impl Output {
             format_number(self.total_blank),
             format_number(self.total_file),
             format_size(self.total_size)
+        ));
+    }
+
+    fn json(&self, data: &mut Vec<String>) {
+        let mut items = Vec::new();
+        for item in &self.data {
+            items.push(format!(
+                r#"{{
+        "language": "{}",
+        "code": {},
+        "comment": {},
+        "blank": {},
+        "file": {},
+        "size": "{}"
+    }}"#,
+                item.language,
+                item.code,
+                item.comment,
+                item.blank,
+                item.file,
+                format_size(item.size)
+            ));
+        }
+        data.push(format!(
+            r#"{{
+    "total": {{
+        "code": {},
+        "comment": {},
+        "blank": {},
+        "file": {},
+        "size": "{}"
+    }},
+    "items": [{}]
+}}"#,
+            self.total_code,
+            self.total_comment,
+            self.total_blank,
+            self.total_file,
+            format_size(self.total_size),
+            items.join(", ")
         ));
     }
 }
