@@ -74,7 +74,7 @@ pub fn parse() -> Args {
                 .short("o")
                 .long("output")
                 .value_name("OUTPUT")
-                .possible_values(&["table", "html", "markdown"])
+                .possible_values(&["table", "html", "markdown", "json"])
                 .default_value("table")
                 .max_values(1)
                 .hide_default_value(true)
